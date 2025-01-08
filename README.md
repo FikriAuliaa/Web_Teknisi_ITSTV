@@ -50,11 +50,11 @@ type Operators = {
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/KenetHilang/pweb-fp-P02-2024.git
+    git clone https://github.com/FikriAuliaa/Web_Teknisi_ITSTV.git
     ```
 2. Navigate to the project directory:
     ```bash
-    cd pweb-fp-P02-2024
+    cd Web_Teknisi_ITSTV
     ```
 
 ### BackEnd
