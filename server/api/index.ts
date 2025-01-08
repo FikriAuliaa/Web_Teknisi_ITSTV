@@ -1,11 +1,14 @@
 import express from "express";
-import connectDB from "./db-connection";
+import connectDB from "../src/db-connection";
 import cors from "cors";
-import adminRouter from "./routes/admin.route";
-import operatorRouter from "./routes/operator.route";
-import authRouter from "./routes/authRoute";
-import borrowRouter from "./routes/sum.route";
-import { authenticateToken, authorizeRole } from "./middleware/authMiddleware"; 
+import adminRouter from "../src/routes/admin.route";
+import operatorRouter from "../src/routes/operator.route";
+import authRouter from "../src/routes/authRoute";
+import borrowRouter from "../src/routes/sum.route";
+import {
+  authenticateToken,
+  authorizeRole,
+} from "../src/middleware/authMiddleware";
 
 const app = express();
 const PORT = 4000;

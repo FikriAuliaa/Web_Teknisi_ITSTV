@@ -10,7 +10,7 @@
     "sourceMap": true,
     "noEmit": false,
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": "./server",
     "typeRoots": ["./node_modules/@types", "./src/@types"], // Tambahkan baris ini
     "skipLibCheck": true,
     "strict": true,
