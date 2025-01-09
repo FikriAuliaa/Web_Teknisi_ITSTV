@@ -5,50 +5,44 @@ import adminRouter from "../src/routes/admin.route";
 import operatorRouter from "../src/routes/operator.route";
 import authRouter from "../src/routes/authRoute";
 import borrowRouter from "../src/routes/sum.route";
-import {
-  authenticateToken,
-  authorizeRole,
-} from "../src/middleware/authMiddleware";
 
 const app = express();
 const PORT = 4000;
 
-// CORS Configuration
+// Allowed Origins
 const allowedOrigins: string[] = [
-  "https://peminjaman-gemilang.netlify.app",
-  "http://localhost:5173", // Tambahkan localhost untuk pengembangan
+  "https://peminjaman-gemilang.netlify.app", // Frontend di Netlify
+  "http://localhost:5173", // Frontend lokal untuk pengembangan
 ];
 
+// CORS Configuration
 const corsOptions: CorsOptions = {
-  origin: (
-    origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void
-  ) => {
+  origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error(`CORS blocked for origin: ${origin}`);
+      console.error(`Blocked by CORS: ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Metode yang diizinkan
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Metode HTTP yang diizinkan
   allowedHeaders: ["Content-Type", "Authorization"], // Header yang diizinkan
-  credentials: true, // Jika menggunakan cookies atau sesi
+  credentials: true, // Jika menggunakan cookie atau sesi
 };
 
-// Gunakan middleware CORS
+// Apply CORS Middleware
 app.use(cors(corsOptions));
 
-// Tangani preflight request (OPTIONS)
+// Handle Preflight Requests (OPTIONS)
 app.options("*", cors(corsOptions));
 
 // Middleware untuk parsing JSON
 app.use(express.json());
 
-// Debugging middleware untuk melihat request origin dan URL
+// Logging middleware untuk debugging
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  console.log("Request Origin:", req.headers.origin);
+  console.log("Origin:", req.headers.origin);
   next();
 });
 
@@ -66,12 +60,23 @@ app.get("/", (req, res) => {
   res.send("Hi Ges");
 });
 
-// Protected routes
-app.use("/admin", authenticateToken, adminRouter);
-app.use("/operator", authenticateToken, operatorRouter);
+app.use("/admin", adminRouter);
+app.use("/operator", operatorRouter);
 
-// Auth and borrow routes
+// Handle CORS for /auth route
+app.use("/auth", (req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.sendStatus(204); // No Content
+  } else {
+    next();
+  }
+});
 app.use("/auth", authRouter);
+
 app.use("/borrow", borrowRouter);
 
 // Error Handling Middleware
