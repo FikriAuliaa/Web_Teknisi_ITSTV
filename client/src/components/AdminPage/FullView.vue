@@ -12,6 +12,9 @@ export default {
     let intervalId = null;
     const router = useRouter();
 
+    // Ambil URL API dari environment variable
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+
     const formatDate = (apiTimestamp) => {
       const date = new Date(apiTimestamp);
       const day = date.getUTCDate();
@@ -27,7 +30,7 @@ export default {
 
     const fetchData = async () => {
       try {
-        const result = await axios.get("http://localhost:4000/admin", {
+        const result = await axios.get(`${API_BASE_URL}/admin`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -57,7 +60,7 @@ export default {
 
     const deleteItem = async (id) => {
       try {
-        await axios.delete(`http://localhost:4000/admin/${id}`, {
+        await axios.delete(`${API_BASE_URL}/admin/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
