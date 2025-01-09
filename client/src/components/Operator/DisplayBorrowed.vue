@@ -63,65 +63,11 @@ export default {
       }
     };
 
-    // Filter available items
-    const availableItemsFiltered = computed(() =>
-      availableItems.value.filter((item) => parseInt(item.amount) > 0)
-    );
-
-    // Handle item selection
-    const selectedItem = ref(null);
-    const handleItemSelect = (itemId) => {
-      const item = availableItems.value.find((item) => item._id === itemId);
-      if (item && parseInt(item.amount) > 0) {
-        selectedItem.value = item;
-        formData.value.item_name = item.name;
-      } else {
-        error.value = "This item is out of stock.";
-        selectedItem.value = null;
-        formData.value.item_name = "";
-      }
-    };
-
-    // Validate amount
-    const validateAmount = computed(() => {
-      if (!selectedItem.value || !formData.value.amount) return true;
-      const requestedAmount = parseInt(formData.value.amount);
-      const availableAmount = parseInt(selectedItem.value.amount);
-      return requestedAmount > 0 && requestedAmount <= availableAmount;
-    });
-
-    // Error message for amount
-    const amountError = computed(() => {
-      if (!selectedItem.value || !formData.value.amount) return "";
-      const requestedAmount = parseInt(formData.value.amount);
-      const availableAmount = parseInt(selectedItem.value.amount);
-
-      if (requestedAmount <= 0) {
-        return "Amount must be greater than 0.";
-      }
-      if (requestedAmount > availableAmount) {
-        return `Cannot borrow more than available stock (${availableAmount}).`;
-      }
-      return "";
-    });
-
+    // Submit Form
     const submitForm = async () => {
       try {
-        error.value = "";
-        success.value = "";
-
-        if (!selectedItem.value) {
-          error.value = "Please select an item.";
-          return;
-        }
-
-        if (!validateAmount.value) {
-          error.value = amountError.value;
-          return;
-        }
-
         const response = await axios.post(
-          `${API_BASE_URL}/borrow/${selectedItem.value._id}`,
+          `${API_BASE_URL}/borrow/${formData.value.item_id}`,
           formData.value,
           {
             headers: {
@@ -129,17 +75,8 @@ export default {
             },
           }
         );
-
         if (response.data.status === "success") {
           success.value = "Item borrowed successfully!";
-          formData.value = {
-            item_name: "",
-            amount: "",
-            borrower_name: "",
-            officer_name: "",
-            return_date: "",
-          };
-          selectedItem.value = null;
         }
       } catch (err) {
         console.error("Error borrowing item:", err);
@@ -147,43 +84,18 @@ export default {
       }
     };
 
-    const getMinDate = () => {
-      const now = new Date();
-      now.setHours(13, 0, 0, 0);
-      if (new Date().getHours() >= 13) {
-        now.setDate(now.getDate() + 1);
-      }
-      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      return now.toISOString().slice(0, 16);
-    };
-
-    const formatTo1PM = (dateString) => {
-      const date = new Date(dateString);
-      date.setHours(13, 0, 0, 0);
-      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      return date.toISOString().slice(0, 16);
-    };
-
     onMounted(() => {
       fetchItems();
       fetchOfficers();
-      formData.value.return_date = getMinDate();
     });
 
     return {
       formData,
       submitForm,
       availableItems,
-      handleItemSelect,
-      selectedItem,
+      availableOfficers,
       error,
       success,
-      minDate: getMinDate(),
-      availableOfficers,
-      formatTo1PM,
-      availableItemsFiltered,
-      validateAmount,
-      amountError,
       goHome,
     };
   },
