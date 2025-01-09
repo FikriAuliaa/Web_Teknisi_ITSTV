@@ -20,16 +20,16 @@ export default {
       condition: "",
     });
 
+    // Ambil URL API dari environment variable
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+
     const fetchItem = async () => {
       try {
-        const result = await axios.get(
-          `http://localhost:4000/admin/${props.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const result = await axios.get(`${API_BASE_URL}/admin/${props.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         item.value = result.data;
         form.value = { ...item.value };
       } catch (error) {
@@ -59,16 +59,12 @@ export default {
       }
 
       try {
-        await axios.patch(
-          `http://localhost:4000/admin/${props.id}`,
-          updatedItem,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        await axios.patch(`${API_BASE_URL}/admin/${props.id}`, updatedItem, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        });
         alert("Item updated successfully!");
         router.push("/admin");
       } catch (error) {
