@@ -1,38 +1,51 @@
 <template>
-  <div class="min-h-screen flex flex-col">
-    <!-- Login Section -->
-    <div class="min-h-screen flex flex-col justify-center items-center">
-      <!-- Form box -->
-      <div class="form-box">
-        <header>Login</header>
-        <div class="input-box">
-          <input
-            v-model="username"
-            type="text"
-            class="input-field"
-            placeholder="Username"
-          />
-          <i class="bx bx-user"></i>
-        </div>
-        <div class="input-box">
-          <input
-            v-model="password"
-            type="password"
-            class="input-field"
-            placeholder="Password"
-          />
-          <i class="bx bx-lock-alt"></i>
-        </div>
-        <div class="input-box">
-          <select v-model="role" class="input-field">
-            <option value="" disabled selected>Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="operator">Crew</option>
-          </select>
-          <i class="bx bx-user-circle"></i>
-        </div>
-        <button @click="login" class="submit">Sign In</button>
+  <div
+    class="min-h-screen flex flex-col justify-center items-center bg-gray-100"
+  >
+    <!-- Form box -->
+    <div class="form-box w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
+      <header>Login</header>
+      <div class="input-box">
+        <input
+          v-model="username"
+          type="text"
+          class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="Username"
+        />
+        <i
+          class="bx bx-user absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
+        ></i>
       </div>
+      <div class="input-box">
+        <input
+          v-model="password"
+          type="password"
+          class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="Password"
+        />
+        <i
+          class="bx bx-lock-alt absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
+        ></i>
+      </div>
+      <div class="input-box">
+        <select
+          v-model="role"
+          class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value="" disabled selected>Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="operator">Crew</option>
+        </select>
+        <i
+          class="bx bx-user-circle absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
+        ></i>
+      </div>
+      <button
+        @click="login"
+        class="submit w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
+      >
+        Sign In
+      </button>
     </div>
   </div>
 </template>
@@ -65,18 +78,17 @@ export default {
           role: this.role,
         });
 
-        // Menggunakan URL dari .env
         const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(
           /\/$/,
           ""
-        ); // Hilangkan trailing slash
+        );
 
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Penting untuk cookies/sesi
+          credentials: "include",
           body: JSON.stringify({
             username: this.username,
             password: this.password,
@@ -96,14 +108,12 @@ export default {
             return;
           }
 
-          // Store token and user info
           localStorage.setItem("token", data.token);
           localStorage.setItem("role", data.user.role);
           localStorage.setItem("username", data.user.username);
 
           alert("Login successful!");
 
-          // Redirect to role-specific route
           this.$router.push({
             path: data.user.role === "admin" ? "/admin" : "/HomePageOperator",
           });
@@ -129,10 +139,8 @@ body {
   background: rgba(255, 255, 255, 0.95);
   padding: 2rem;
   border-radius: 10px;
-  width: 400px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
   text-align: center;
-  margin: 50px auto;
 }
 
 .form-box header {
