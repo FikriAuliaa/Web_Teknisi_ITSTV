@@ -14,7 +14,6 @@ export default {
   setup(props) {
     const item = ref(null);
     const form = ref({
-      pic: "",
       name: "",
       amount: "",
       condition: "",
@@ -40,9 +39,6 @@ export default {
     const submitForm = async () => {
       const updatedItem = {};
 
-      if (form.value.pic !== item.value.pic) {
-        updatedItem.pic = form.value.pic;
-      }
       if (form.value.name !== item.value.name) {
         updatedItem.name = form.value.name;
       }
