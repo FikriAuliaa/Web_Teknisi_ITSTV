@@ -14,6 +14,9 @@ export default {
     const sortKey = ref("");
     const sortOrder = ref(1);
 
+    // Ambil URL API dari environment variable
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+
     const formatDate = (dateString) => {
       if (!dateString) return "Not Yet Returned";
       const options = {
@@ -30,7 +33,7 @@ export default {
     const fetchData = async () => {
       loading.value = true;
       try {
-        const result = await axios.get("http://localhost:4000/borrow");
+        const result = await axios.get(`${API_BASE_URL}/borrow`);
         if (result.data && result.data.data) {
           Borrow.value = result.data.data.map((borrow) => ({
             ...borrow,
@@ -55,7 +58,7 @@ export default {
         }
 
         const response = await axios.get(
-          `http://localhost:4000/borrow/${selectedRow.value}`
+          `${API_BASE_URL}/borrow/${selectedRow.value}`
         );
         const data = response.data.data;
 
