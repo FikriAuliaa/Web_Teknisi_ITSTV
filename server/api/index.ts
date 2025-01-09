@@ -1,4 +1,9 @@
-import express from "express";
+import express, {
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from "express";
 import connectDB from "../src/db-connection";
 import cors, { CorsOptions } from "cors";
 import adminRouter from "../src/routes/admin.route";
@@ -27,20 +32,20 @@ const corsOptions: CorsOptions = {
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Metode HTTP yang diizinkan
   allowedHeaders: ["Content-Type", "Authorization"], // Header yang diizinkan
-  credentials: true, // Jika menggunakan cookie atau sesi
+  credentials: true, // Mengizinkan cookie atau sesi
 };
 
-// Apply CORS Middleware
+// Gunakan middleware CORS
 app.use(cors(corsOptions));
 
-// Handle Preflight Requests (OPTIONS)
+// Tangani preflight request secara global
 app.options("*", cors(corsOptions));
 
 // Middleware untuk parsing JSON
 app.use(express.json());
 
 // Logging middleware untuk debugging
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log("Origin:", req.headers.origin);
   next();
@@ -55,37 +60,36 @@ connectDB()
     console.error("Failed to connect to the database:", error);
   });
 
-// Routes
-app.get("/", (req, res) => {
-  res.send("Hi Ges");
-});
-
-app.use("/admin", adminRouter);
-app.use("/operator", operatorRouter);
-
-// Handle CORS for /auth route
-app.use("/auth", (req, res, next) => {
+// Middleware untuk preflight request
+const handlePreflight: express.RequestHandler = (req, res, next) => {
   if (req.method === "OPTIONS") {
     res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
     res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Credentials", "true");
-    res.sendStatus(204); // No Content
+    res.status(204).end(); // Mengakhiri respons
   } else {
     next();
   }
-});
-app.use("/auth", authRouter);
+};
 
+// Routes
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hi Ges");
+});
+
+app.use("/admin", adminRouter);
+app.use("/operator", operatorRouter);
+app.use("/auth", handlePreflight, authRouter);
 app.use("/borrow", borrowRouter);
 
 // Error Handling Middleware
 app.use(
   (
     err: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction // Middleware error dengan tipe
   ) => {
     console.error("Unhandled Error:", err.message);
     res.status(err.status || 500).json({
