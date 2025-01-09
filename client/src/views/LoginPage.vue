@@ -65,17 +65,20 @@ export default {
           role: this.role,
         });
 
-        const response = await fetch("http://localhost:4000/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: this.username,
-            password: this.password,
-            role: this.role, // Role sent to backend
-          }),
-        });
+        const response = await fetch(
+          "https://peminjaman-gemilang.netlify.app/auth/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: this.username,
+              password: this.password,
+              role: this.role, // Role sent to backend
+            }),
+          }
+        );
 
         const data = await response.json();
 
