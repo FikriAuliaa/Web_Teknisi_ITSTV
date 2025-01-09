@@ -1,124 +1,189 @@
 <script>
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
-  name: "DisplayBorrowed",
+  name: "BorrowForm",
   setup() {
+    const route = useRoute();
     const router = useRouter();
+
+    // Ambil URL API dari environment variable
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
 
     const goHome = () => {
       router.push("/");
     };
 
-    const borrowedItems = ref([]);
-    const error = ref("");
-    const loading = ref(true);
+    const formData = ref({
+      item_name: "",
+      amount: "",
+      borrower_name: "",
+      officer_name: "",
+      return_date: "",
+    });
 
-    const fetchBorrowedItems = async () => {
-      loading.value = true;
+    const availableItems = ref([]);
+    const availableOfficers = ref([]);
+    const error = ref("");
+    const success = ref("");
+
+    // Fetch available items
+    const fetchItems = async () => {
       try {
-        const result = await axios.get("http://localhost:4000/borrow/", {
+        const response = await axios.get(`${API_BASE_URL}/admin/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        if (result.data && result.data.data) {
-          borrowedItems.value = result.data.data;
-        } else {
-          error.value = "Data not in expected format.";
+        if (response.data && response.data.data) {
+          availableItems.value = response.data.data;
         }
       } catch (err) {
-        error.value = "Error fetching data. Please try again later.";
-      } finally {
-        loading.value = false;
+        console.error("Error fetching items:", err);
+        error.value = "Failed to fetch available items.";
       }
     };
 
-    const returnItem = async (borrowId) => {
+    // Fetch available officers
+    const fetchOfficers = async () => {
       try {
+        const response = await axios.get(`${API_BASE_URL}/operator/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        if (response.data && response.data.data) {
+          availableOfficers.value = response.data.data;
+        }
+      } catch (err) {
+        console.error("Error fetching officers:", err);
+        error.value = "Failed to fetch available officers.";
+      }
+    };
+
+    // Filter available items
+    const availableItemsFiltered = computed(() =>
+      availableItems.value.filter((item) => parseInt(item.amount) > 0)
+    );
+
+    // Handle item selection
+    const selectedItem = ref(null);
+    const handleItemSelect = (itemId) => {
+      const item = availableItems.value.find((item) => item._id === itemId);
+      if (item && parseInt(item.amount) > 0) {
+        selectedItem.value = item;
+        formData.value.item_name = item.name;
+      } else {
+        error.value = "This item is out of stock.";
+        selectedItem.value = null;
+        formData.value.item_name = "";
+      }
+    };
+
+    // Validate amount
+    const validateAmount = computed(() => {
+      if (!selectedItem.value || !formData.value.amount) return true;
+      const requestedAmount = parseInt(formData.value.amount);
+      const availableAmount = parseInt(selectedItem.value.amount);
+      return requestedAmount > 0 && requestedAmount <= availableAmount;
+    });
+
+    // Error message for amount
+    const amountError = computed(() => {
+      if (!selectedItem.value || !formData.value.amount) return "";
+      const requestedAmount = parseInt(formData.value.amount);
+      const availableAmount = parseInt(selectedItem.value.amount);
+
+      if (requestedAmount <= 0) {
+        return "Amount must be greater than 0.";
+      }
+      if (requestedAmount > availableAmount) {
+        return `Cannot borrow more than available stock (${availableAmount}).`;
+      }
+      return "";
+    });
+
+    const submitForm = async () => {
+      try {
+        error.value = "";
+        success.value = "";
+
+        if (!selectedItem.value) {
+          error.value = "Please select an item.";
+          return;
+        }
+
+        if (!validateAmount.value) {
+          error.value = amountError.value;
+          return;
+        }
+
         const response = await axios.post(
-          `http://localhost:4000/borrow/return/${borrowId}`,
-          {},
+          `${API_BASE_URL}/borrow/${selectedItem.value._id}`,
+          formData.value,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
+
         if (response.data.status === "success") {
-          // Update the specific item's is_returned status locally
-          const itemIndex = borrowedItems.value.findIndex(
-            (item) => item._id === borrowId
-          );
-          if (itemIndex !== -1) {
-            borrowedItems.value[itemIndex].is_returned = true;
-          }
+          success.value = "Item borrowed successfully!";
+          formData.value = {
+            item_name: "",
+            amount: "",
+            borrower_name: "",
+            officer_name: "",
+            return_date: "",
+          };
+          selectedItem.value = null;
         }
       } catch (err) {
-        error.value = err.response?.data?.message || "Error returning item";
+        console.error("Error borrowing item:", err);
+        error.value = err.response?.data?.message || "Error borrowing item.";
       }
     };
 
-    // Simplify canBeReturned to only check is_returned
-    const canBeReturned = (item) => {
-      return !item.is_returned;
-    };
-
-    const sortField = ref("item_name");
-    const sortDirection = ref("asc");
-
-    const toggleSort = (field) => {
-      if (sortField.value === field) {
-        sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
-      } else {
-        sortField.value = field;
-        sortDirection.value = "asc";
+    const getMinDate = () => {
+      const now = new Date();
+      now.setHours(13, 0, 0, 0);
+      if (new Date().getHours() >= 13) {
+        now.setDate(now.getDate() + 1);
       }
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      return now.toISOString().slice(0, 16);
     };
 
-    const sortedBorrowedItems = computed(() => {
-      return [...borrowedItems.value].sort((a, b) => {
-        let compareResult = 0;
-        switch (sortField.value) {
-          case "item_name":
-            compareResult = a.item_name.localeCompare(b.item_name);
-            break;
-          case "amount":
-            compareResult = parseInt(a.amount) - parseInt(b.amount);
-            break;
-          case "borrower_name":
-            compareResult = a.borrower_name.localeCompare(b.borrower_name);
-            break;
-          case "officer_name":
-            compareResult = a.officer_name.localeCompare(b.officer_name);
-            break;
-          case "borrow_date":
-            compareResult = new Date(a.borrow_date) - new Date(b.borrow_date);
-            break;
-          case "return_date":
-            compareResult = new Date(a.return_date) - new Date(b.return_date);
-            break;
-        }
-        return sortDirection.value === "asc" ? compareResult : -compareResult;
-      });
-    });
+    const formatTo1PM = (dateString) => {
+      const date = new Date(dateString);
+      date.setHours(13, 0, 0, 0);
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+      return date.toISOString().slice(0, 16);
+    };
 
     onMounted(() => {
-      fetchBorrowedItems();
+      fetchItems();
+      fetchOfficers();
+      formData.value.return_date = getMinDate();
     });
 
     return {
-      borrowedItems,
+      formData,
+      submitForm,
+      availableItems,
+      handleItemSelect,
+      selectedItem,
       error,
-      loading,
-      returnItem,
-      canBeReturned,
-      sortField,
-      sortDirection,
-      toggleSort,
-      sortedBorrowedItems,
+      success,
+      minDate: getMinDate(),
+      availableOfficers,
+      formatTo1PM,
+      availableItemsFiltered,
+      validateAmount,
+      amountError,
       goHome,
     };
   },
