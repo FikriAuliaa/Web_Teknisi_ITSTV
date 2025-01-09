@@ -65,20 +65,21 @@ export default {
           role: this.role,
         });
 
-        const response = await fetch(
-          "https://peminjaman-barang-itstv.vercel.app/auth/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: this.username,
-              password: this.password,
-              role: this.role, // Role sent to backend
-            }),
-          }
-        );
+        // Menggunakan URL dari .env
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Penting untuk cookies/sesi
+          body: JSON.stringify({
+            username: this.username,
+            password: this.password,
+            role: this.role,
+          }),
+        });
 
         const data = await response.json();
 

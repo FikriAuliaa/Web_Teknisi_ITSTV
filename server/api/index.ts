@@ -1,6 +1,6 @@
 import express from "express";
 import connectDB from "../src/db-connection";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import adminRouter from "../src/routes/admin.route";
 import operatorRouter from "../src/routes/operator.route";
 import authRouter from "../src/routes/authRoute";
@@ -14,25 +14,41 @@ const app = express();
 const PORT = 4000;
 
 // CORS Configuration
-const allowedOrigins = [
+const allowedOrigins: string[] = [
   "https://peminjaman-gemilang.netlify.app",
-  "http://localhost:5173",
+  "http://localhost:5173", // Tambahkan localhost untuk pengembangan
 ];
-const corsOptions = {
-  origin: (origin: string | undefined, callback: any) => {
+
+const corsOptions: CorsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Metode yang diizinkan
+  allowedHeaders: ["Content-Type", "Authorization"], // Header yang diizinkan
+  credentials: true, // Jika menggunakan cookies atau sesi
 };
 
+// Gunakan middleware CORS
 app.use(cors(corsOptions));
 
-// Middleware
+// Tangani preflight request (OPTIONS)
+app.options("*", cors(corsOptions));
+
+// Middleware untuk parsing JSON
 app.use(express.json());
+
+// Debugging middleware untuk melihat request origin
+app.use((req, res, next) => {
+  console.log("Request Origin:", req.headers.origin);
+  next();
+});
 
 // Database Connection
 connectDB();
