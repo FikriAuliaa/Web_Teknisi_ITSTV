@@ -8,6 +8,8 @@ const error = ref("");
 const loading = ref(true);
 const router = useRouter();
 
+// Ambil URL API dari environment variable
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
 const sortField = ref("name");
 const sortDirection = ref("asc");
 
@@ -41,7 +43,7 @@ const sortedEquipments = computed(() => {
 const fetchEquipments = async () => {
   loading.value = true;
   try {
-    const result = await axios.get("http://localhost:4000/admin/", {
+    const result = await axios.get(`${API_BASE_URL}/admin/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
