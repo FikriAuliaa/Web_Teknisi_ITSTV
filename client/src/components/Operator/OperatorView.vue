@@ -11,10 +11,13 @@ export default {
     const loading = ref(true);
     const router = useRouter();
 
+    // Ambil URL API dari environment variable
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+
     const fetchData = async () => {
       loading.value = true;
       try {
-        const result = await axios.get("http://localhost:4000/operator", {
+        const result = await axios.get(`${API_BASE_URL}/operator`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -33,7 +36,7 @@ export default {
 
     const deleteOperator = async (id) => {
       try {
-        await axios.delete(`http://localhost:4000/operator/${id}`, {
+        await axios.delete(`${API_BASE_URL}/operator/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

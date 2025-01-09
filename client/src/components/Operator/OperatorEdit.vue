@@ -18,16 +18,16 @@ export default {
       email: "",
     });
 
+    // Ambil URL API dari environment variable
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+
     const fetchOperator = async () => {
       try {
-        const result = await axios.get(
-          `http://localhost:4000/operator/${props.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const result = await axios.get(`${API_BASE_URL}/operator/${props.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         operator.value = result.data;
         form.value = {
           name: operator.value.name || "",
@@ -44,7 +44,7 @@ export default {
 
       try {
         await axios.patch(
-          `http://localhost:4000/operator/${props.id}`,
+          `${API_BASE_URL}/operator/${props.id}`,
           updatedOperator,
           {
             headers: {

@@ -86,8 +86,11 @@ export default {
     submitForm() {
       console.log(this.form);
 
+      // Ambil URL API dari environment variable
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+
       axios
-        .post("http://localhost:4000/operator", this.form, {
+        .post(`${API_BASE_URL}/operator`, this.form, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
