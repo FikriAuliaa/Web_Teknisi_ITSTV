@@ -79,7 +79,7 @@ export default {
         X
       </button>
       <h1 class="mb-3 text-white text-center md:text-2xl text-xl">
-        Edit Operator
+        Edit Teknisi
       </h1>
 
       <form @submit.prevent="submitForm">
@@ -87,7 +87,7 @@ export default {
           <label
             for="name"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Operator Name</label
+            >Nama Teknisi</label
           >
           <input
             type="text"
@@ -103,7 +103,7 @@ export default {
           <label
             for="noTelp"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Phone Number</label
+            >No. HP</label
           >
           <input
             type="text"

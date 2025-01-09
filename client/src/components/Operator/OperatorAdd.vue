@@ -3,14 +3,14 @@
     <div class="form md:w-2/4 w-5/6">
       <button @click="onClose" class="close-button">X</button>
       <h1 class="mb-3 text-white text-center md:text-2xl text-xl">
-        New Operator Form
+        Tambah Teknisi
       </h1>
       <form class="max-w-md mx-auto" @submit.prevent="submitForm">
         <div class="mb-5">
           <label
             for="name"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Item Name</label
+            >Nama</label
           >
           <input
             type="text"
@@ -40,7 +40,7 @@
           <label
             for="NoTelp"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Phone Number</label
+            >No. HP</label
           >
           <input
             type="text"
