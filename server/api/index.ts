@@ -27,6 +27,7 @@ const corsOptions: CorsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`CORS blocked for origin: ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
@@ -44,24 +45,49 @@ app.options("*", cors(corsOptions));
 // Middleware untuk parsing JSON
 app.use(express.json());
 
-// Debugging middleware untuk melihat request origin
+// Debugging middleware untuk melihat request origin dan URL
 app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log("Request Origin:", req.headers.origin);
   next();
 });
 
 // Database Connection
-connectDB();
+connectDB()
+  .then(() => {
+    console.log("Database connected successfully");
+  })
+  .catch((error) => {
+    console.error("Failed to connect to the database:", error);
+  });
 
 // Routes
 app.get("/", (req, res) => {
   res.send("Hi Ges");
 });
 
+// Protected routes
 app.use("/admin", authenticateToken, adminRouter);
 app.use("/operator", authenticateToken, operatorRouter);
+
+// Auth and borrow routes
 app.use("/auth", authRouter);
 app.use("/borrow", borrowRouter);
+
+// Error Handling Middleware
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error("Unhandled Error:", err.message);
+    res.status(err.status || 500).json({
+      error: err.message || "Internal Server Error",
+    });
+  }
+);
 
 // Start Server
 app.listen(PORT, () => {
