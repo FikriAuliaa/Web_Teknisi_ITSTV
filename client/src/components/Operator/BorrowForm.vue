@@ -9,6 +9,9 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
+    // Ambil URL API dari environment variable
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+
     const goHome = () => {
       router.push("/");
     };
@@ -29,7 +32,7 @@ export default {
     // Fetch available items
     const fetchItems = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/admin/", {
+        const response = await axios.get(`${API_BASE_URL}/admin/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -46,7 +49,7 @@ export default {
     // Fetch available officers
     const fetchOfficers = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/operator/", {
+        const response = await axios.get(`${API_BASE_URL}/operator/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -118,7 +121,7 @@ export default {
         }
 
         const response = await axios.post(
-          `http://localhost:4000/borrow/${selectedItem.value._id}`,
+          `${API_BASE_URL}/borrow/${selectedItem.value._id}`,
           formData.value,
           {
             headers: {
