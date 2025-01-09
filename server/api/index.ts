@@ -15,7 +15,7 @@ const PORT = 4000;
 
 // CORS Configuration
 const allowedOrigins = [
-  "https://peminjaman-gemilang.netlify.app/",
+  "https://peminjaman-gemilang.netlify.app",
   "http://localhost:5173",
 ];
 const corsOptions = {
