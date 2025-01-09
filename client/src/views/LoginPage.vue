@@ -66,7 +66,10 @@ export default {
         });
 
         // Menggunakan URL dari .env
-        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(
+          /\/$/,
+          ""
+        ); // Hilangkan trailing slash
 
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
           method: "POST",
