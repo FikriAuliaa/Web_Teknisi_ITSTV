@@ -66,7 +66,7 @@ export default {
         });
 
         const response = await fetch(
-          "https://peminjaman-gemilang.netlify.app/auth/login",
+          "https://peminjaman-barang-itstv.vercel.app/auth/login",
           {
             method: "POST",
             headers: {
