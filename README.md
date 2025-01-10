@@ -1,7 +1,13 @@
 # Website Peminjaman ITS TV
 
-## Frontend URL : https://peminjaman-gemilang.netlify.app/
-## Backend URL : https://peminjaman-barang-itstv.vercel.app/
+### Frontend URL
+```
+https://peminjaman-gemilang.netlify.app/
+```
+### Backend URL
+```
+https://peminjaman-barang-itstv.vercel.app/
+```
 
 ### **Data Models**
 ```bash
