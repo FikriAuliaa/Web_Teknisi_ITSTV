@@ -1,10 +1,13 @@
 # Website Peminjaman ITS TV
 
-## **Data Models**
+## Frontend URL : https://peminjaman-gemilang.netlify.app/
+## Backend URL : https://peminjaman-barang-itstv.vercel.app/
+
+### **Data Models**
 ```bash
 enum Role {
-	'USER',
-	'ADMIN'
+	'Admin',
+	'Operator'
 }
 
 type User = {
@@ -31,22 +34,20 @@ type BorrowItems = {
 }
 
 type Operators = {
-    image: string;
     name: string;
-    age: string;
     NoTelp: string;
     Email: string;
 }
 ```
 
-## Technologies Used
+### Technologies Used
 
-- **Frontend**: HTML, CSS, TypeScript, Vue.js
-- **Backend**: Node.js, Express.js
+- **Frontend**: HTML, CSS, TypeScript, Vue.js, Netlify
+- **Backend**: Node.js, Express.js, Vercell
 - **Database**: MongoDB
 - **Version Control**: Git, GitHub
 
-## Installation
+## Installation (For Development)
 
 1. Clone the repository:
     ```bash
@@ -67,10 +68,10 @@ type Operators = {
     ```bash
     npm install
     ```
-5. Set up the database and configure environment variables.
+5. Set up the database and configure environment variables. Make an .env file in /server directory
     ```bash
-    MONGODB_URI=mongodb+srv://[username]:[pw]@[cluster-name]/[db-name]?retryWrites=true&w=majority&appName=[]
-    JWT_SECRET=(....)
+    DATABASE_URI=mongodb+srv://fikriaulia:DepotTaria14@cluster0.xkzlj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    JWT_SECRET=1t5tv3ur3k4
     PORT=5000
     ```
 6. Start the development server:
