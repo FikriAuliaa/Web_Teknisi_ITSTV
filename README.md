@@ -10,18 +10,22 @@ https://peminjaman-barang-itstv.vercel.app/
 ```
 
 ### Admin Credentials
-#### 
+```
 username : admin
+
 password : admin
+
 role : Admin
-####
+```
 
 ### Crew Credentials
-#### 
+```
 username : crew
+
 password : crew
+
 role : Crew
-####
+```
 
 ### **Data Models**
 ```bash
