@@ -1,15 +1,15 @@
 # Website Peminjaman ITS TV
 
-### Frontend URL
+## Frontend URL
 ```
 https://peminjaman-gemilang.netlify.app/
 ```
-### Backend URL
+## Backend URL
 ```
 https://peminjaman-barang-itstv.vercel.app/
 ```
 
-### Admin Credentials
+## Admin Credentials
 ```
 username : admin
 
@@ -17,8 +17,12 @@ password : admin
 
 role : Admin
 ```
+### Fitur Admin
+- Menambah, edit, dan hapus barang
+- Menambah, edit, dan hapus teknisi
+- Membuat Invoice dari peminjaman
 
-### Crew Credentials
+## Crew Credentials
 ```
 username : crew
 
@@ -27,7 +31,11 @@ password : crew
 role : Crew
 ```
 
-### **Data Models**
+### Fitur Crew
+- Meminjam dan mengembalikan barang
+- Melihat list barang yang tersedia
+  
+## **Data Models**
 ```bash
 enum Role {
 	'Admin',
