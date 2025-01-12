@@ -17,6 +17,7 @@ export default {
       name: "",
       amount: "",
       condition: "",
+      kategori: "", // Tambahkan properti kategori
     });
 
     // Ambil URL API dari environment variable
@@ -30,7 +31,12 @@ export default {
           },
         });
         item.value = result.data;
-        form.value = { ...item.value };
+
+        // Tetapkan default kategori ke "Lain-lain" jika tidak ada kategori
+        form.value = {
+          ...item.value,
+          kategori: item.value.kategori || "Lain-lain",
+        };
       } catch (error) {
         console.error("Error fetching item:", error);
       }
@@ -47,6 +53,9 @@ export default {
       }
       if (form.value.condition !== item.value.condition) {
         updatedItem.condition = form.value.condition;
+      }
+      if (form.value.kategori !== item.value.kategori) {
+        updatedItem.kategori = form.value.kategori;
       }
 
       if (Object.keys(updatedItem).length === 0) {
@@ -138,6 +147,30 @@ export default {
           </select>
         </div>
 
+        <div class="mb-5">
+          <label
+            for="kategori"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Kategori</label
+          >
+          <select
+            id="kategori"
+            v-model="form.kategori"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+          >
+            <option value="" disabled>Select Category</option>
+            <option value="Kamera">Kamera</option>
+            <option value="Lensa">Lensa</option>
+            <option value="Gimbal">Gimbal</option>
+            <option value="Lighting">Lighting</option>
+            <option value="Tripod">Tripod</option>
+            <option value="Baterai dan charger">Baterai dan charger</option>
+            <option value="SD card">SD card</option>
+            <option value="Alat Live">Alat Live</option>
+            <option value="Lain-lain">Lain-lain</option>
+          </select>
+        </div>
+
         <button
           type="submit"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
@@ -148,36 +181,3 @@ export default {
     </div>
   </div>
 </template>
-
-<style>
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 998;
-}
-.form {
-  position: relative;
-  padding: 3rem;
-  background-color: rgb(31 41 55);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  z-index: 999;
-}
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-</style>

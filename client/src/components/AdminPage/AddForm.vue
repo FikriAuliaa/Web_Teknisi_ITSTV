@@ -6,6 +6,7 @@
         Form Pengisian
       </h1>
       <form class="max-w-md mx-auto" @submit.prevent="submitForm">
+        <!-- Item Name -->
         <div class="mb-5">
           <label
             for="name"
@@ -22,6 +23,7 @@
           />
         </div>
 
+        <!-- Amount -->
         <div class="mb-5">
           <label
             for="amount"
@@ -39,6 +41,7 @@
           />
         </div>
 
+        <!-- Condition -->
         <div class="mb-5">
           <label
             for="condition"
@@ -56,6 +59,32 @@
             <option value="Good">Good</option>
             <option value="Bad">Bad</option>
             <option value="Broken">Broken</option>
+          </select>
+        </div>
+
+        <!-- Kategori -->
+        <div class="mb-5">
+          <label
+            for="kategori"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Kategori</label
+          >
+          <select
+            id="kategori"
+            v-model="form.kategori"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          >
+            <option value="" disabled>Select Category</option>
+            <option value="Kamera">Kamera</option>
+            <option value="Lensa">Lensa</option>
+            <option value="Gimbal">Gimbal</option>
+            <option value="Lighting">Lighting</option>
+            <option value="Tripod">Tripod</option>
+            <option value="Baterai dan charger">Baterai dan charger</option>
+            <option value="SD card">SD card</option>
+            <option value="Alat Live">Alat Live</option>
+            <option value="Lain-lain">Lain-lain</option>
           </select>
         </div>
 
@@ -88,6 +117,7 @@ export default {
         name: "",
         amount: null,
         condition: "",
+        kategori: "", // Tambahkan properti kategori
       },
     };
   },
@@ -113,6 +143,7 @@ export default {
             name: "",
             amount: null,
             condition: "",
+            kategori: "", // Reset kategori
           };
 
           if (this.onClose) {
@@ -126,36 +157,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 998;
-}
-.form {
-  position: relative;
-  padding: 3rem;
-  background-color: rgb(31 41 55);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  z-index: 999;
-}
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-</style>
