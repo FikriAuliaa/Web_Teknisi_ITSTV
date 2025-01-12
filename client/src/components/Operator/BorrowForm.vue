@@ -1,12 +1,11 @@
 <script>
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 export default {
   name: "BorrowForm",
   setup() {
-    const route = useRoute();
     const router = useRouter();
 
     // Ambil URL API dari environment variable
@@ -22,10 +21,12 @@ export default {
       borrower_name: "",
       officer_name: "",
       return_date: "",
+      borrow_date: "", // Tambahkan properti borrow_date
     });
 
     const availableItems = ref([]);
     const availableOfficers = ref([]);
+    const selectedCategory = ref("All"); // Tambahkan properti untuk kategori yang dipilih
     const error = ref("");
     const success = ref("");
 
@@ -38,7 +39,10 @@ export default {
           },
         });
         if (response.data && response.data.data) {
-          availableItems.value = response.data.data;
+          availableItems.value = response.data.data.map((item) => ({
+            ...item,
+            kategori: item.kategori || "Lain-lain", // Tetapkan kategori default jika tidak ada
+          }));
         }
       } catch (err) {
         console.error("Error fetching items:", err);
@@ -63,12 +67,17 @@ export default {
       }
     };
 
-    // Filter available items
-    const availableItemsFiltered = computed(() =>
-      availableItems.value.filter((item) => parseInt(item.amount) > 0)
+    // Filter available items by category
+    const filteredItemsByCategory = computed(() =>
+      selectedCategory.value === "All"
+        ? availableItems.value.filter((item) => parseInt(item.amount) > 0)
+        : availableItems.value.filter(
+            (item) =>
+              parseInt(item.amount) > 0 &&
+              item.kategori === selectedCategory.value
+          )
     );
 
-    // Handle item selection
     const selectedItem = ref(null);
     const handleItemSelect = (itemId) => {
       const item = availableItems.value.find((item) => item._id === itemId);
@@ -82,7 +91,6 @@ export default {
       }
     };
 
-    // Validate amount
     const validateAmount = computed(() => {
       if (!selectedItem.value || !formData.value.amount) return true;
       const requestedAmount = parseInt(formData.value.amount);
@@ -90,7 +98,6 @@ export default {
       return requestedAmount > 0 && requestedAmount <= availableAmount;
     });
 
-    // Error message for amount
     const amountError = computed(() => {
       if (!selectedItem.value || !formData.value.amount) return "";
       const requestedAmount = parseInt(formData.value.amount);
@@ -138,6 +145,7 @@ export default {
             borrower_name: "",
             officer_name: "",
             return_date: "",
+            borrow_date: "", // Reset borrow_date
           };
           selectedItem.value = null;
         }
@@ -149,10 +157,6 @@ export default {
 
     const getMinDate = () => {
       const now = new Date();
-      now.setHours(13, 0, 0, 0);
-      if (new Date().getHours() >= 13) {
-        now.setDate(now.getDate() + 1);
-      }
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
       return now.toISOString().slice(0, 16);
     };
@@ -168,12 +172,15 @@ export default {
       fetchItems();
       fetchOfficers();
       formData.value.return_date = getMinDate();
+      formData.value.borrow_date = getMinDate(); // Set default borrow_date
     });
 
     return {
       formData,
       submitForm,
       availableItems,
+      selectedCategory, // Tambahkan untuk kategori yang dipilih
+      filteredItemsByCategory, // Tambahkan item yang difilter
       handleItemSelect,
       selectedItem,
       error,
@@ -181,7 +188,6 @@ export default {
       minDate: getMinDate(),
       availableOfficers,
       formatTo1PM,
-      availableItemsFiltered,
       validateAmount,
       amountError,
       goHome,
@@ -217,6 +223,34 @@ export default {
         {{ success }}
       </div>
 
+      <!-- Dropdown Kategori -->
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="category"
+        >
+          Kategori
+        </label>
+        <select
+          id="category"
+          v-model="selectedCategory"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          required
+        >
+          <option value="All">Semua Kategori</option>
+          <option value="Kamera">Kamera</option>
+          <option value="Lensa">Lensa</option>
+          <option value="Gimbal">Gimbal</option>
+          <option value="Lighting">Lighting</option>
+          <option value="Tripod">Tripod</option>
+          <option value="Baterai dan charger">Baterai dan charger</option>
+          <option value="SD card">SD card</option>
+          <option value="Alat Live">Alat Live</option>
+          <option value="Lain-lain">Lain-lain</option>
+        </select>
+      </div>
+
+      <!-- Dropdown Item -->
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="item">
           Alat
@@ -230,26 +264,16 @@ export default {
         >
           <option value="">Pilih Item</option>
           <option
-            v-for="item in availableItemsFiltered"
+            v-for="item in filteredItemsByCategory"
             :key="item._id"
             :value="item._id"
           >
             {{ item.name }} (Tersedia: {{ item.amount }})
           </option>
-          <option
-            v-for="item in availableItems.filter(
-              (i) => parseInt(i.amount) === 0
-            )"
-            :key="item._id"
-            :value="item._id"
-            disabled
-            class="text-gray-400"
-          >
-            {{ item.name }} (Tidak tersedia)
-          </option>
         </select>
       </div>
 
+      <!-- Jumlah -->
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
           Jumlah
@@ -264,7 +288,6 @@ export default {
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           :class="{ 'border-red-500': !validateAmount && formData.amount }"
           required
-          @input="formData.amount = formData.amount.replace(/[^0-9]/g, '')"
         />
         <p v-if="amountError" class="text-red-500 text-xs italic mt-1">
           {{ amountError }}
@@ -274,6 +297,7 @@ export default {
         </p>
       </div>
 
+      <!-- Nama Peminjam -->
       <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
@@ -290,7 +314,7 @@ export default {
         />
       </div>
 
-      <!-- Update the officer select element to use correct data structure -->
+      <!-- Nama Teknisi -->
       <div class="mb-6">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
@@ -315,7 +339,25 @@ export default {
         </select>
       </div>
 
-      <!-- Add return date field before the submit button -->
+      <!-- Tanggal Peminjaman -->
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="borrow_date"
+        >
+          Tanggal Peminjaman
+        </label>
+        <input
+          type="datetime-local"
+          id="borrow_date"
+          v-model="formData.borrow_date"
+          :min="minDate"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          required
+        />
+      </div>
+
+      <!-- Tanggal Pengembalian -->
       <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
@@ -328,12 +370,12 @@ export default {
           id="return_date"
           v-model="formData.return_date"
           :min="minDate"
-          @change="formData.return_date = formatTo1PM($event.target.value)"
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           required
         />
       </div>
 
+      <!-- Submit Button -->
       <div class="flex items-center justify-end">
         <button
           type="submit"
