@@ -5,6 +5,7 @@ export enum ItemCategory {
   Kamera = "Kamera",
   Lensa = "Lensa",
   Gimbal = "Gimbal",
+  Audio = "Audio",
   Lighting = "Lighting",
   Tripod = "Tripod",
   BateraiCharger = "Baterai dan charger",

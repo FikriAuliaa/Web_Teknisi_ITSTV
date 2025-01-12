@@ -132,6 +132,7 @@ export default {
         <option value="Kamera">Kamera</option>
         <option value="Lensa">Lensa</option>
         <option value="Gimbal">Gimbal</option>
+        <option value="Audio">Audio</option>
         <option value="Lighting">Lighting</option>
         <option value="Tripod">Tripod</option>
         <option value="Baterai dan charger">Baterai dan charger</option>
