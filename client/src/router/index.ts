@@ -1,131 +1,138 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from '@/views/LoginPage.vue';
-import AdminPage from '@/views/AdminPage.vue';
-import EditItem from '@/components/AdminPage/EditItem.vue';
-import AdminOperatorPage from '@/views/OperatorPage.vue';
-import SummaryPage from '@/views/SummaryPage.vue';
-import OperatorEdit from '@/components/Operator/OperatorEdit.vue';
-import BorrowForm from '@/components/Operator/BorrowForm.vue';
-import DisplayBorrowed from '@/components/Operator/DisplayBorrowed.vue';
-import DisplayEquipment from '@/components/Operator/DisplayEquipment.vue';
-import Rules from '@/views/Rules.vue';
-import HomePageOperator from '@/views/HomePageOperator.vue';
-import OperatorPage from '@/views/OperatorPage.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import LoginPage from "@/views/LoginPage.vue";
+import AdminPage from "@/views/AdminPage.vue";
+import EditItem from "@/components/AdminPage/EditItem.vue";
+import AdminOperatorPage from "@/views/OperatorPage.vue";
+import SummaryPage from "@/views/SummaryPage.vue";
+import OperatorEdit from "@/components/Operator/OperatorEdit.vue";
+import BorrowForm from "@/components/Operator/BorrowForm.vue";
+import DisplayBorrowed from "@/components/Operator/DisplayBorrowed.vue";
+import DisplayEquipment from "@/components/Operator/DisplayEquipment.vue";
+import Rules from "@/views/Rules.vue";
+import HomePageOperator from "@/views/HomePageOperator.vue";
+import OperatorPage from "@/views/OperatorPage.vue";
+import TechnicianPage from "@/views/TechnicianPage.vue"; // Tambahkan import untuk komponen TechnicianPage
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
+      path: "/",
+      name: "home",
       component: LoginPage,
       meta: { requiresAuth: false },
     },
     {
-      path: '/admin',
-      name: 'admin',
+      path: "/admin",
+      name: "admin",
       component: AdminPage,
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/admin/edit-item/:id',
-      name: 'edit-item',
+      path: "/admin/edit-item/:id",
+      name: "edit-item",
       component: EditItem,
       props: true,
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/admin/all-operator',
-      name: 'all-operator',
+      path: "/admin/all-operator",
+      name: "all-operator",
       component: AdminOperatorPage,
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/admin/editoperator/:id',
-      name: 'edit-admin',
+      path: "/admin/editoperator/:id",
+      name: "edit-admin",
       component: OperatorEdit,
       props: true,
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/Operator/OperatorEdit',
-      name: 'edit-operator',
+      path: "/Operator/OperatorEdit",
+      name: "edit-operator",
       component: OperatorEdit,
       props: true,
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/HomePageOperator',
-      name: 'HomePageOperator',
+      path: "/HomePageOperator",
+      name: "HomePageOperator",
       component: HomePageOperator,
       meta: { requiresAuth: true, requiresOperator: true },
     },
     {
-      path: '/operator/book-equipment',
-      name: 'book-equipment',
+      path: "/operator/book-equipment",
+      name: "book-equipment",
       component: BorrowForm,
       meta: { requiresAuth: true, requiresOperator: true },
     },
     {
-      path: '/admin/summary',
-      name: 'summary',
+      path: "/admin/summary",
+      name: "summary",
       component: SummaryPage,
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/operator/borrowed-items',
-      name: 'borrowed-items',
+      path: "/operator/borrowed-items",
+      name: "borrowed-items",
       component: DisplayBorrowed,
       meta: { requiresAuth: true, requiresOperator: true },
     },
     {
-      path: '/operator/all-equipment',
-      name: 'all-equipment',
+      path: "/operator/all-equipment",
+      name: "all-equipment",
       component: DisplayEquipment,
       meta: { requiresAuth: true, requiresOperator: true },
     },
     {
-      path: '/rules',
-      name: 'rules',
+      path: "/rules",
+      name: "rules",
       component: Rules,
       meta: { requiresAuth: false },
     },
     {
-      path: '/:pathMatch(.*)*',
-      redirect: '/'
-    }
+      path: "/teknisi",
+      name: "teknisi",
+      component: TechnicianPage,
+      meta: { requiresAuth: false },
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      redirect: "/",
+    },
   ],
 });
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
   if (!to.name) {
-    next('/');
+    next("/");
     return;
   }
 
   if (to.meta.requiresAuth && !token) {
-    next('/');
+    next("/");
     return;
   }
 
-  if (to.meta.requiresAdmin && role !== 'admin') {
-    next('/');
+  if (to.meta.requiresAdmin && role !== "admin") {
+    next("/");
     return;
   }
 
-  if (to.meta.requiresOperator && role !== 'operator') {
-    next('/');
+  if (to.meta.requiresOperator && role !== "operator") {
+    next("/");
     return;
   }
 
-  if (to.path === '/' && token) {
-    if (role === 'admin') {
-      next('/admin');
-    } else if (role === 'operator') {
-      next('/HomePageOperator');
+  if (to.path === "/" && token) {
+    if (role === "admin") {
+      next("/admin");
+    } else if (role === "operator") {
+      next("/HomePageOperator");
     }
     return;
   }

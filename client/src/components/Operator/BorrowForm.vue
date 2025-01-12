@@ -21,7 +21,7 @@ export default {
       borrower_name: "",
       officer_name: "",
       return_date: "",
-      borrow_date: "", // Tambahkan properti borrow_date
+      borrow_date: "",
     });
 
     const availableItems = ref([]);
@@ -29,6 +29,8 @@ export default {
     const selectedCategory = ref("All"); // Tambahkan properti untuk kategori yang dipilih
     const error = ref("");
     const success = ref("");
+    const showPopup = ref(false); // Kontrol untuk menampilkan pop-up
+    const selectedOfficer = ref({}); // Informasi teknisi yang dipilih
 
     // Fetch available items
     const fetchItems = async () => {
@@ -145,9 +147,19 @@ export default {
             borrower_name: "",
             officer_name: "",
             return_date: "",
-            borrow_date: "", // Reset borrow_date
+            borrow_date: "",
           };
           selectedItem.value = null;
+
+          // Tampilkan pop-up dengan informasi teknisi
+          const officer = availableOfficers.value.find(
+            (officer) => officer.name === formData.value.officer_name
+          );
+          selectedOfficer.value = officer || {
+            name: "Unknown",
+            phone: "Unknown",
+          };
+          showPopup.value = true;
         }
       } catch (err) {
         console.error("Error borrowing item:", err);
@@ -161,13 +173,6 @@ export default {
       return now.toISOString().slice(0, 16);
     };
 
-    const formatTo1PM = (dateString) => {
-      const date = new Date(dateString);
-      date.setHours(13, 0, 0, 0);
-      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      return date.toISOString().slice(0, 16);
-    };
-
     onMounted(() => {
       fetchItems();
       fetchOfficers();
@@ -179,18 +184,19 @@ export default {
       formData,
       submitForm,
       availableItems,
-      selectedCategory, // Tambahkan untuk kategori yang dipilih
-      filteredItemsByCategory, // Tambahkan item yang difilter
+      selectedCategory,
+      filteredItemsByCategory,
       handleItemSelect,
       selectedItem,
       error,
       success,
       minDate: getMinDate(),
       availableOfficers,
-      formatTo1PM,
       validateAmount,
       amountError,
       goHome,
+      showPopup,
+      selectedOfficer,
     };
   },
 };
@@ -386,5 +392,30 @@ export default {
         </button>
       </div>
     </form>
+
+    <!-- Pop-up -->
+    <div
+      v-if="showPopup"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg text-center">
+        <h3 class="text-xl font-bold mb-4">Peminjaman Berhasil</h3>
+        <p class="mb-2">Jangan lupa konfirmasi ke teknisi yang bertugas.</p>
+        <p class="mb-4">
+          <router-link
+            to="/teknisi"
+            class="text-blue-500 underline hover:text-blue-700"
+          >
+            Klik disini untuk melihat daftar teknisi.
+          </router-link>
+        </p>
+        <button
+          @click="showPopup = false"
+          class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Tutup
+        </button>
+      </div>
+    </div>
   </div>
 </template>
