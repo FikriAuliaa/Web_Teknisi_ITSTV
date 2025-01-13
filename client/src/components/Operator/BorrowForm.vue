@@ -8,8 +8,7 @@ export default {
   setup() {
     const router = useRouter();
 
-    // Ambil URL API dari environment variable
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 
     const goHome = () => {
       router.push("/");
@@ -17,23 +16,22 @@ export default {
 
     const formData = ref({
       item_name: "",
-      amount: "1", // Set default value to 1
+      amount: "1",
       borrower_name: "",
       officer_name: "",
       return_date: "",
       borrow_date: "",
-      purpose: "", // Tambahkan keperluan
+      purpose: "",
     });
 
     const availableItems = ref([]);
     const availableOfficers = ref([]);
-    const selectedCategory = ref("All"); // Tambahkan properti untuk kategori yang dipilih
+    const selectedCategory = ref("All");
     const error = ref("");
     const success = ref("");
-    const showPopup = ref(false); // Kontrol untuk menampilkan pop-up
-    const selectedOfficer = ref({}); // Informasi teknisi yang dipilih
+    const showPopup = ref(false);
+    const selectedOfficer = ref({});
 
-    // Fetch available items
     const fetchItems = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/admin/`, {
@@ -44,7 +42,7 @@ export default {
         if (response.data && response.data.data) {
           availableItems.value = response.data.data.map((item) => ({
             ...item,
-            kategori: item.kategori || "Lain-lain", // Tetapkan kategori default jika tidak ada
+            kategori: item.kategori || "Lain-lain",
           }));
         }
       } catch (err) {
@@ -53,7 +51,6 @@ export default {
       }
     };
 
-    // Fetch available officers
     const fetchOfficers = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/operator/`, {
@@ -70,7 +67,6 @@ export default {
       }
     };
 
-    // Filter available items by category
     const filteredItemsByCategory = computed(() =>
       selectedCategory.value === "All"
         ? availableItems.value.filter((item) => parseInt(item.amount) > 0)
@@ -144,7 +140,7 @@ export default {
           success.value = "Item borrowed successfully!";
           formData.value = {
             item_name: "",
-            amount: "1", // Reset to default value
+            amount: "1",
             borrower_name: "",
             officer_name: "",
             return_date: "",
@@ -153,7 +149,6 @@ export default {
           };
           selectedItem.value = null;
 
-          // Tampilkan pop-up dengan informasi teknisi
           const officer = availableOfficers.value.find(
             (officer) => officer.name === formData.value.officer_name
           );
@@ -179,7 +174,7 @@ export default {
       fetchItems();
       fetchOfficers();
       formData.value.return_date = getMinDate();
-      formData.value.borrow_date = getMinDate(); // Set default borrow_date
+      formData.value.borrow_date = getMinDate();
     });
 
     return {
@@ -221,12 +216,10 @@ export default {
     >
       <h2 class="text-2xl font-bold mb-6 text-gray-800">Peminjaman Alat</h2>
 
-      <!-- Error Message -->
       <div v-if="error" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
         {{ error }}
       </div>
 
-      <!-- Success Message -->
       <div v-if="success" class="mb-4 p-3 bg-green-100 text-green-700 rounded">
         {{ success }}
       </div>
@@ -283,30 +276,8 @@ export default {
           v-model="formData.purpose"
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           rows="3"
-          placeholder="Tuliskan keperluan peminjaman"
           required
         ></textarea>
-      </div>
-
-      <!-- Jumlah Peminjaman -->
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
-          Jumlah Peminjaman
-        </label>
-        <input
-          type="number"
-          id="amount"
-          v-model="formData.amount"
-          min="1"
-          step="1"
-          placeholder="Masukkan jumlah peminjaman"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          :class="{ 'border-red-500': !validateAmount && formData.amount }"
-          required
-        />
-        <p v-if="amountError" class="text-red-500 text-xs italic mt-1">
-          {{ amountError }}
-        </p>
       </div>
 
       <!-- Tanggal Peminjaman -->
@@ -395,14 +366,34 @@ export default {
         </select>
       </div>
 
-      <!-- Submit Button -->
+      <!-- Jumlah Peminjaman -->
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+          Jumlah Peminjaman
+        </label>
+        <input
+          type="number"
+          id="amount"
+          v-model="formData.amount"
+          min="1"
+          step="1"
+          placeholder="Masukkan jumlah peminjaman"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          :class="{ 'border-red-500': !validateAmount && formData.amount }"
+          required
+        />
+        <p v-if="amountError" class="text-red-500 text-xs italic mt-1">
+          {{ amountError }}
+        </p>
+      </div>
+
       <div class="flex items-center justify-end">
         <button
           type="submit"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           :disabled="!validateAmount"
         >
-          Pinjam
+          Submit
         </button>
       </div>
     </form>
