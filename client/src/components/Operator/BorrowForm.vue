@@ -17,11 +17,12 @@ export default {
 
     const formData = ref({
       item_name: "",
-      amount: "",
+      amount: "1", // Set default value to 1
       borrower_name: "",
       officer_name: "",
       return_date: "",
       borrow_date: "",
+      purpose: "", // Tambahkan keperluan
     });
 
     const availableItems = ref([]);
@@ -143,11 +144,12 @@ export default {
           success.value = "Item borrowed successfully!";
           formData.value = {
             item_name: "",
-            amount: "",
+            amount: "1", // Reset to default value
             borrower_name: "",
             officer_name: "",
             return_date: "",
             borrow_date: "",
+            purpose: "",
           };
           selectedItem.value = null;
 
@@ -229,80 +231,6 @@ export default {
         {{ success }}
       </div>
 
-      <!-- Dropdown Kategori -->
-      <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="category"
-        >
-          Kategori
-        </label>
-        <select
-          id="category"
-          v-model="selectedCategory"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          required
-        >
-          <option value="All">Semua Kategori</option>
-          <option value="Kamera">Kamera</option>
-          <option value="Lensa">Lensa</option>
-          <option value="Gimbal">Gimbal</option>
-          <option value="Lighting">Lighting</option>
-          <option value="Tripod">Tripod</option>
-          <option value="Baterai dan charger">Baterai dan charger</option>
-          <option value="SD card">SD card</option>
-          <option value="Alat Live">Alat Live</option>
-          <option value="Lain-lain">Lain-lain</option>
-        </select>
-      </div>
-
-      <!-- Dropdown Item -->
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="item">
-          Alat
-        </label>
-        <select
-          id="item"
-          @change="handleItemSelect($event.target.value)"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          required
-          :value="selectedItem?._id"
-        >
-          <option value="">Pilih Item</option>
-          <option
-            v-for="item in filteredItemsByCategory"
-            :key="item._id"
-            :value="item._id"
-          >
-            {{ item.name }} (Tersedia: {{ item.amount }})
-          </option>
-        </select>
-      </div>
-
-      <!-- Jumlah -->
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
-          Jumlah
-        </label>
-        <input
-          type="number"
-          id="amount"
-          v-model="formData.amount"
-          :max="selectedItem?.amount"
-          min="1"
-          step="1"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          :class="{ 'border-red-500': !validateAmount && formData.amount }"
-          required
-        />
-        <p v-if="amountError" class="text-red-500 text-xs italic mt-1">
-          {{ amountError }}
-        </p>
-        <p v-if="selectedItem" class="text-gray-600 text-xs mt-1">
-          Valid range: 1 - {{ selectedItem.amount }}
-        </p>
-      </div>
-
       <!-- Nama Peminjam -->
       <div class="mb-4">
         <label
@@ -321,7 +249,7 @@ export default {
       </div>
 
       <!-- Nama Teknisi -->
-      <div class="mb-6">
+      <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
           for="officer_name"
@@ -343,6 +271,42 @@ export default {
             {{ officer.name }}
           </option>
         </select>
+      </div>
+
+      <!-- Keperluan -->
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="purpose">
+          Keperluan
+        </label>
+        <textarea
+          id="purpose"
+          v-model="formData.purpose"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          rows="3"
+          placeholder="Tuliskan keperluan peminjaman"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Jumlah Peminjaman -->
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+          Jumlah Peminjaman
+        </label>
+        <input
+          type="number"
+          id="amount"
+          v-model="formData.amount"
+          min="1"
+          step="1"
+          placeholder="Masukkan jumlah peminjaman"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          :class="{ 'border-red-500': !validateAmount && formData.amount }"
+          required
+        />
+        <p v-if="amountError" class="text-red-500 text-xs italic mt-1">
+          {{ amountError }}
+        </p>
       </div>
 
       <!-- Tanggal Peminjaman -->
@@ -381,6 +345,56 @@ export default {
         />
       </div>
 
+      <!-- Dropdown Kategori -->
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="category"
+        >
+          Kategori
+        </label>
+        <select
+          id="category"
+          v-model="selectedCategory"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          required
+        >
+          <option value="All">Semua Kategori</option>
+          <option value="Kamera">Kamera</option>
+          <option value="Lensa">Lensa</option>
+          <option value="Gimbal">Gimbal</option>
+          <option value="Lighting">Lighting</option>
+          <option value="Tripod">Tripod</option>
+          <option value="Baterai dan charger">Baterai dan charger</option>
+          <option value="SD card">SD card</option>
+          <option value="Alat Live">Alat Live</option>
+          <option value="Lain-lain">Lain-lain</option>
+        </select>
+      </div>
+
+      <!-- Dropdown Item -->
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="item">
+          Nama Alat
+        </label>
+        <select
+          id="item"
+          @change="handleItemSelect($event.target.value)"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          required
+          :value="selectedItem?._id"
+        >
+          <option value="">Pilih Item</option>
+          <option
+            v-for="item in filteredItemsByCategory"
+            :key="item._id"
+            :value="item._id"
+          >
+            {{ item.name }} (Tersedia: {{ item.amount }})
+          </option>
+        </select>
+      </div>
+
       <!-- Submit Button -->
       <div class="flex items-center justify-end">
         <button
@@ -400,13 +414,15 @@ export default {
     >
       <div class="bg-white p-6 rounded shadow-lg text-center">
         <h3 class="text-xl font-bold mb-4">Peminjaman Berhasil</h3>
-        <p class="mb-2">Jangan lupa konfirmasi ke teknisi yang bertugas.</p>
+        <p class="mb-2">
+          Terima kasih sudah mengisi, jangan lupa konfirmasi ke teknisi.
+        </p>
         <p class="mb-4">
           <router-link
             to="/teknisi"
             class="text-blue-500 underline hover:text-blue-700"
           >
-            Klik disini untuk melihat daftar teknisi.
+            Lihat kontak teknisi di sini!
           </router-link>
         </p>
         <button

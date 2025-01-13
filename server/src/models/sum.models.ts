@@ -9,6 +9,7 @@ export interface BorrowInter {
   officer_name: string;
   is_returned: boolean | null; // Add this field
   kategori: string; // Add kategori field
+  purpose: string; // Add purpose field
 }
 
 const BorrowSchema = new mongoose.Schema({
@@ -44,6 +45,10 @@ const BorrowSchema = new mongoose.Schema({
     type: String,
     default: "Lain-lain", // Set default value
     required: true, // Ensure it is always provided
+  },
+  purpose: {
+    type: String,
+    required: true, // Ensure purpose is provided
   },
 });
 

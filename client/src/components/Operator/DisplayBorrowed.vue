@@ -8,7 +8,7 @@ export default {
   setup() {
     const router = useRouter();
 
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 
     const goHome = () => {
       router.push("/");
@@ -50,7 +50,6 @@ export default {
           }
         );
         if (response.data.status === "success") {
-          // Update the specific item's is_returned status locally
           const itemIndex = borrowedItems.value.findIndex(
             (item) => item._id === borrowId
           );
@@ -63,7 +62,6 @@ export default {
       }
     };
 
-    // Simplify canBeReturned to only check is_returned
     const canBeReturned = (item) => {
       return !item.is_returned;
     };
@@ -95,6 +93,9 @@ export default {
             break;
           case "officer_name":
             compareResult = a.officer_name.localeCompare(b.officer_name);
+            break;
+          case "purpose":
+            compareResult = a.purpose.localeCompare(b.purpose);
             break;
           case "borrow_date":
             compareResult = new Date(a.borrow_date) - new Date(b.borrow_date);
@@ -137,10 +138,9 @@ export default {
         Back to Home
       </button>
       <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
-        Borrowed Items List
+        Daftar alat sedang dipinjam
       </h2>
       <div class="w-24"></div>
-      <!-- Spacer for alignment -->
     </div>
 
     <!-- Loading state -->
@@ -168,6 +168,7 @@ export default {
                 amount: 'Amount',
                 borrower_name: 'Borrower',
                 officer_name: 'Officer',
+                purpose: 'Purpose',
                 borrow_date: 'Borrow Date',
                 return_date: 'Return Date',
               }"
@@ -199,6 +200,7 @@ export default {
                 'amount',
                 'borrower_name',
                 'officer_name',
+                'purpose',
               ]"
               :key="field"
               class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"

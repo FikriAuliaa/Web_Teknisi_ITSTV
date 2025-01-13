@@ -3,9 +3,6 @@
     <div
       class="w-full max-w-lg bg-white bg-opacity-80 backdrop-blur-md rounded-lg shadow-lg p-6 mx-auto transform transition-all duration-500 hover:shadow-2xl glow-effect"
     >
-      <header class="text-2xl font-serif text-gray-800 text-center mb-6">
-        Data Teknisi
-      </header>
       <ul class="space-y-4">
         <li
           v-for="technician in technicians"
