@@ -4,42 +4,13 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 
 const equipments = ref([]);
+const selectedCategory = ref("All"); // Properti untuk kategori yang dipilih
 const error = ref("");
 const loading = ref(true);
 const router = useRouter();
 
 // Ambil URL API dari environment variable
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
-const sortField = ref("name");
-const sortDirection = ref("asc");
-
-const toggleSort = (field) => {
-  if (sortField.value === field) {
-    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
-  } else {
-    sortField.value = field;
-    sortDirection.value = "asc";
-  }
-};
-
-const sortedEquipments = computed(() => {
-  return [...equipments.value].sort((a, b) => {
-    let compareResult = 0;
-    switch (sortField.value) {
-      case "name":
-        compareResult = a.name.localeCompare(b.name);
-        break;
-      case "amount":
-        compareResult = parseInt(a.amount) - parseInt(b.amount);
-        break;
-      case "condition":
-        compareResult = a.condition.localeCompare(b.condition);
-        break;
-    }
-    return sortDirection.value === "asc" ? compareResult : -compareResult;
-  });
-});
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 const fetchEquipments = async () => {
   loading.value = true;
   try {
@@ -49,147 +20,110 @@ const fetchEquipments = async () => {
       },
     });
     if (result.data && result.data.data) {
-      equipments.value = result.data.data;
-    } else {
-      error.value = "Data not in expected format.";
+      equipments.value = result.data.data.map((item) => ({
+        ...item,
+        kategori:
+          item.kategori && item.kategori.trim() !== ""
+            ? item.kategori
+            : "Lain-lain", // Gunakan item.kategori
+        image: `/src/assets/${item.name.replace(/\s+/g, "_")}.jpg`, // Path ke gambar lokal
+      }));
     }
   } catch (err) {
-    error.value = "Error fetching data. Please try again later.";
+    error.value = "Error fetching equipment data.";
   } finally {
     loading.value = false;
   }
 };
 
-const handleBorrow = (item) => {
-  router.push({
-    name: "book-equipment",
-    query: {
-      itemId: item._id,
-      itemName: item.name,
-      itemAmount: item.amount,
-    },
-  });
-};
-
-const goHome = () => {
-  router.push("/");
-};
-
-onMounted(() => {
-  fetchEquipments();
+const filteredEquipments = computed(() => {
+  if (selectedCategory.value === "All") {
+    return equipments.value;
+  }
+  return equipments.value.filter(
+    (item) => item.kategori === selectedCategory.value
+  ); // Filter berdasarkan item.kategori
 });
+
+const handleBorrow = (equipmentId) => {
+  console.log(`Borrow equipment with ID: ${equipmentId}`);
+};
+
+onMounted(fetchEquipments);
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-      <button
-        @click="goHome"
-        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Back to Home
-      </button>
-      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
-        Alat Tersedia
-      </h2>
-      <div class="w-24"></div>
-      <!-- Spacer for alignment -->
-    </div>
-
-    <!-- Loading state -->
-    <div v-if="loading" class="flex justify-center items-center">
-      <div
-        class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"
-      ></div>
-    </div>
-
-    <!-- Error state -->
-    <div v-if="error" class="text-red-500 text-center mb-4">
-      {{ error }}
-    </div>
-
-    <!-- Table -->
-    <div v-if="!loading && equipments.length" class="overflow-x-auto">
-      <table
-        class="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden"
-      >
-        <thead class="bg-gray-100 dark:bg-gray-700">
-          <tr>
-            <th
-              @click="toggleSort('name')"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200"
-            >
-              Alat
-              <span v-if="sortField === 'name'" class="ml-1">
-                {{ sortDirection === "asc" ? "↑" : "↓" }}
-              </span>
-            </th>
-            <th
-              @click="toggleSort('amount')"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200"
-            >
-              Jumlah Tersedia
-              <span v-if="sortField === 'amount'" class="ml-1">
-                {{ sortDirection === "asc" ? "↑" : "↓" }}
-              </span>
-            </th>
-            <th
-              @click="toggleSort('condition')"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200"
-            >
-              Kondisi
-              <span v-if="sortField === 'condition'" class="ml-1">
-                {{ sortDirection === "asc" ? "↑" : "↓" }}
-              </span>
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-            >
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
-          <tr
-            v-for="item in sortedEquipments"
-            :key="item._id"
-            class="hover:bg-gray-50 dark:hover:bg-gray-700 group"
-          >
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
-            >
-              {{ item.name }}
-            </td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
-            >
-              {{ item.amount }}
-            </td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
-            >
-              {{ item.condition }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <button
-                @click="handleBorrow(item)"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                :disabled="item.amount <= 0"
-              >
-                Pinjam
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Empty state -->
-    <div
-      v-if="!loading && !equipments.length"
-      class="text-center text-gray-500 dark:text-gray-400"
+  <div class="p-4">
+    <!-- Tombol Back -->
+    <button
+      class="mb-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
+      @click="router.back()"
     >
-      Tidak ada barang tersedia.
+      Back
+    </button>
+
+    <!-- Filter Kategori -->
+    <div class="mb-4">
+      <label for="filter-category" class="block font-bold mb-2"
+        >Filter by Category</label
+      >
+      <select
+        id="filter-category"
+        v-model="selectedCategory"
+        class="border rounded px-4 py-2 w-full"
+      >
+        <option value="All">All</option>
+        <option value="Kamera">Kamera</option>
+        <option value="Lensa">Lensa</option>
+        <option value="Gimbal">Gimbal</option>
+        <option value="Audio">Audio</option>
+        <option value="Lighting">Lighting</option>
+        <option value="Tripod">Tripod</option>
+        <option value="Baterai dan charger">Baterai dan charger</option>
+        <option value="SD card">SD card</option>
+        <option value="Alat Live">Alat Live</option>
+        <option value="Lain-lain">Lain-lain</option>
+      </select>
+    </div>
+
+    <!-- Konten -->
+    <div v-if="loading" class="text-center">Loading...</div>
+    <div v-else-if="error">{{ error }}</div>
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div
+        v-for="equipment in filteredEquipments"
+        :key="equipment._id"
+        class="bg-white shadow-md rounded-lg p-4 flex flex-col"
+      >
+        <img
+          :src="equipment.image"
+          alt="Equipment Image"
+          class="rounded-lg w-full h-48 object-contain mb-4"
+        />
+        <h2 class="text-lg font-bold">{{ equipment.name }}</h2>
+        <p>Jumlah: {{ equipment.amount }}</p>
+        <p>Kondisi: {{ equipment.condition }}</p>
+        <p>Kategori: {{ equipment.category }}</p>
+        <button
+          class="mt-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+          @click="handleBorrow(equipment._id)"
+        >
+          Pinjam
+        </button>
+      </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Custom styling for the card view */
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  transition: box-shadow 0.3s ease;
+}
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+</style>
