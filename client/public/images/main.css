@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  height: 100%;
+  overflow-y: auto;
+  background: rgb(2,0,36);
+  background: radial-gradient(circle, rgba(2,0,36,1) 61%, rgba(2,0,36,1) 67%, rgba(2,0,36,1) 72%, rgba(117,116,136,1) 84%, rgba(255,255,255,1) 100%);
+  font-family: "Comfortaa", sans-serif;
+}
+
+a{
+  transition: 0.4s;
+}

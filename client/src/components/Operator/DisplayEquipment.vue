@@ -11,6 +11,7 @@ const router = useRouter();
 
 // Ambil URL API dari environment variable
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
+
 const fetchEquipments = async () => {
   loading.value = true;
   try {
@@ -26,7 +27,7 @@ const fetchEquipments = async () => {
           item.kategori && item.kategori.trim() !== ""
             ? item.kategori
             : "Lain-lain", // Gunakan item.kategori
-        image: `/src/assets/${item.name.replace(/\s+/g, "_")}.jpg`, // Path ke gambar lokal
+        image: `/images/${item.name.replace(/\s+/g, "_")}.jpg`, // Path ke gambar di public/images
       }));
     }
   } catch (err) {
@@ -103,7 +104,7 @@ onMounted(fetchEquipments);
         <h2 class="text-lg font-bold">{{ equipment.name }}</h2>
         <p>Jumlah: {{ equipment.amount }}</p>
         <p>Kondisi: {{ equipment.condition }}</p>
-        <p>Kategori: {{ equipment.category }}</p>
+        <p>Kategori: {{ equipment.kategori }}</p>
         <button
           class="mt-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
           @click="handleBorrow(equipment._id)"
