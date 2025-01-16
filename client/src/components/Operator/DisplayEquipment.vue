@@ -51,7 +51,7 @@ const filteredEquipments = computed(() => {
 // Fungsi untuk mengarahkan ke halaman peminjaman dengan data item
 const handleBorrow = (item) => {
   router.push({
-    path: "/borrow",
+    path: "/operator/book-equipment",
     query: {
       id: item._id,
       name: item.name,
