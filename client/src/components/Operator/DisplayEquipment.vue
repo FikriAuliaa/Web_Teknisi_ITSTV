@@ -7,9 +7,9 @@ const equipments = ref([]);
 const selectedCategory = ref("All"); // Properti untuk kategori yang dipilih
 const error = ref("");
 const loading = ref(true);
+const showPopup = ref(false); // Properti untuk menampilkan pop-up
 const router = useRouter();
 
-// Ambil URL API dari environment variable
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 
 // Fungsi untuk mengambil data peralatan
@@ -50,6 +50,12 @@ const filteredEquipments = computed(() => {
 
 // Fungsi untuk mengarahkan ke halaman peminjaman dengan data item
 const handleBorrow = (item) => {
+  if (item.amount <= 0) {
+    // Tampilkan pop-up jika jumlah barang kurang dari atau sama dengan 0
+    showPopup.value = true;
+    return;
+  }
+
   router.push({
     path: "/operator/book-equipment",
     query: {
@@ -58,6 +64,11 @@ const handleBorrow = (item) => {
       amount: item.amount,
     },
   });
+};
+
+// Tutup pop-up
+const closePopup = () => {
+  showPopup.value = false;
 };
 
 onMounted(fetchEquipments);
@@ -122,6 +133,23 @@ onMounted(fetchEquipments);
           :disabled="item.amount <= 0"
         >
           Pinjam
+        </button>
+      </div>
+    </div>
+
+    <!-- Pop-Up -->
+    <div
+      v-if="showPopup"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg text-center">
+        <h3 class="text-xl font-bold mb-4">Barang Sedang Dipinjam</h3>
+        <p class="text-gray-700">Barang sedang dipinjam oleh orang lain.</p>
+        <button
+          @click="closePopup"
+          class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Tutup
         </button>
       </div>
     </div>
