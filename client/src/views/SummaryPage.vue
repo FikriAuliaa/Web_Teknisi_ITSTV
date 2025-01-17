@@ -50,16 +50,9 @@ export default {
       }
     };
 
-    const exportToPDF = async () => {
+    const exportRowToPDF = async (rowId) => {
       try {
-        if (!selectedRow.value) {
-          alert("No row selected. Please select a record.");
-          return;
-        }
-
-        const response = await axios.get(
-          `${API_BASE_URL}/borrow/${selectedRow.value}`
-        );
+        const response = await axios.get(`${API_BASE_URL}/borrow/${rowId}`);
         const data = response.data.data;
 
         invoiceData.value = {
@@ -119,10 +112,10 @@ export default {
       Borrow,
       error,
       loading,
-      exportToPDF,
       selectedRow,
       invoiceData,
       sortBy,
+      exportRowToPDF, // Pastikan fungsi ini disertakan di return
     };
   },
 };
@@ -174,23 +167,33 @@ export default {
           </th>
         </tr>
       </thead>
+
       <tbody>
-        <tr
-          v-for="(borrowed, index) in Borrow"
-          :key="borrowed._id"
-          @click="selectedRow = borrowed._id"
-          :class="{ 'bg-gray-300': selectedRow === borrowed._id }"
-          class="hover:bg-gray-200 cursor-pointer"
-        >
-          <td>{{ index + 1 }}</td>
-          <td>{{ borrowed.item_name }}</td>
-          <td>{{ borrowed.amount }}</td>
-          <td>{{ borrowed.borrow_date }}</td>
-          <td>{{ borrowed.return_date }}</td>
-          <td>{{ borrowed.borrower_name }}</td>
-          <td>{{ borrowed.officer_name }}</td>
-        </tr>
-      </tbody>
+  <tr
+    v-for="(borrowed, index) in Borrow"
+    :key="borrowed._id"
+    class="hover:bg-gray-200 cursor-pointer"
+  >
+    <td>{{ index + 1 }}</td>
+    <td>{{ borrowed.item_name }}</td>
+    <td>{{ borrowed.amount }}</td>
+    <td>{{ borrowed.borrow_date }}</td>
+    <td>{{ borrowed.return_date }}</td>
+    <td>{{ borrowed.borrower_name }}</td>
+    <td>{{ borrowed.officer_name }}</td>
+    <td>
+      <!-- Pastikan pemanggilan fungsi ini mengacu pada fungsi yang sudah diekspor -->
+      <button
+        @click="exportRowToPDF(borrowed._id)"
+        class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-700 transition duration-200"
+      >
+        Download PDF
+      </button>
+    </td>
+  </tr>
+</tbody>
+
+
     </table>
 
     <div id="invoice-template" ref="invoice" style="display: none">
