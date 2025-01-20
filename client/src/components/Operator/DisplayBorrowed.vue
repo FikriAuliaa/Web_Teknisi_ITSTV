@@ -68,7 +68,7 @@ export default {
       return !item.is_returned;
     };
 
-    const sortField = ref("item_name");
+    const sortField = ref("borrow_date");
     const sortDirection = ref("asc");
 
     const toggleSort = (field) => {
@@ -85,14 +85,14 @@ export default {
         let compareResult = 0;
         switch (sortField.value) {
           case "item_name":
-            compareResult = (
-              a.borrowedItems?.[0]?.item_name || ""
-            ).localeCompare(b.borrowedItems?.[0]?.item_name || "");
+            compareResult = (a.items?.[0]?.item_name || "").localeCompare(
+              b.items?.[0]?.item_name || ""
+            );
             break;
           case "amount":
             compareResult =
-              (parseInt(a.borrowedItems?.[0]?.amount) || 0) -
-              (parseInt(b.borrowedItems?.[0]?.amount) || 0);
+              (parseInt(a.items?.[0]?.amount) || 0) -
+              (parseInt(b.items?.[0]?.amount) || 0);
             break;
           case "borrower_name":
             compareResult = (a.borrower_name || "").localeCompare(
@@ -169,33 +169,28 @@ export default {
 
     <!-- Table -->
     <div v-if="!loading && borrowedItems.length" class="overflow-x-auto">
-      <table
-        class="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden"
-      >
-        <thead class="bg-gray-100 dark:bg-gray-700">
+      <table class="min-w-full bg-white border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
           <tr>
-            <th
-              v-for="(label, field) in {
-                item_name: 'Item Name',
-                amount: 'Amount',
-                borrower_name: 'Borrower',
-                officer_name: 'Officer',
-                purpose: 'Purpose',
-                borrow_date: 'Borrow Date',
-                return_date: 'Return Date',
-              }"
-              :key="field"
-              @click="toggleSort(field)"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200"
-            >
-              {{ label }}
-              <span v-if="sortField === field" class="ml-1">
-                {{ sortDirection === "asc" ? "↑" : "↓" }}
-              </span>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Item Name
             </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-            >
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Borrower
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Officer
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Purpose
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Borrow Date
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Return Date
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
               Actions
             </th>
           </tr>
@@ -206,10 +201,10 @@ export default {
             :key="item._id"
             class="hover:bg-gray-50 dark:hover:bg-gray-700 group"
           >
-            <td class="px-6 py-4">
-              <div v-if="item.borrowedItems && item.borrowedItems.length">
+            <td class="px-6 py-4 text-center border border-gray-300">
+              <div v-if="item.items && item.items.length">
                 <div
-                  v-for="borrowedItem in item.borrowedItems"
+                  v-for="borrowedItem in item.items"
                   :key="borrowedItem.item_id"
                 >
                   {{ borrowedItem.item_name }} (Jumlah:
@@ -218,23 +213,22 @@ export default {
               </div>
               <div v-else>No items</div>
             </td>
-
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 text-center border border-gray-300">
               {{ item.borrower_name }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 text-center border border-gray-300">
               {{ item.officer_name }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 text-center border border-gray-300">
               {{ item.purpose }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 text-center border border-gray-300">
               {{ new Date(item.borrow_date).toLocaleDateString() }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 text-center border border-gray-300">
               {{ new Date(item.return_date).toLocaleDateString() }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 text-center border border-gray-300">
               <button
                 v-if="canBeReturned(item)"
                 @click="returnItem(item._id)"
@@ -242,7 +236,7 @@ export default {
               >
                 Return
               </button>
-              <span v-else class="py-2 px-4 text-gray-500"> Returned </span>
+              <span v-else class="text-gray-500">Returned</span>
             </td>
           </tr>
         </tbody>
