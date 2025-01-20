@@ -1,261 +1,172 @@
-<script>
-import { ref, onMounted, nextTick } from "vue";
-import axios from "axios";
-import html2pdf from "html2pdf.js";
-
-export default {
-  name: "SummaryPage",
-  setup() {
-    const Borrow = ref([]);
-    const error = ref("");
-    const loading = ref(true);
-    const selectedRow = ref(null);
-    const invoiceData = ref({});
-    const sortKey = ref("");
-    const sortOrder = ref(1);
-
-    // Ambil URL API dari environment variable
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
-
-    const formatDate = (dateString) => {
-      if (!dateString) return "Not Yet Returned";
-      const options = {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      };
-      return new Date(dateString).toLocaleDateString(undefined, options);
-    };
-
-    const fetchData = async () => {
-      loading.value = true;
-      try {
-        const result = await axios.get(`${API_BASE_URL}/borrow`);
-        if (result.data && result.data.data) {
-          Borrow.value = result.data.data.map((borrow) => ({
-            ...borrow,
-            borrow_date: formatDate(borrow.borrow_date),
-            return_date: formatDate(borrow.return_date),
-          }));
-        } else {
-          error.value = "Data not in expected format.";
-        }
-      } catch (err) {
-        error.value = "Error fetching data. Please try again later.";
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    const exportRowToPDF = async (rowId) => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/borrow/${rowId}`);
-        const data = response.data.data;
-
-        invoiceData.value = {
-          borrower_name: data.borrower_name,
-          officer_name: data.officer_name,
-          borrow_date: formatDate(data.borrow_date),
-          return_date: formatDate(data.return_date),
-          item_name: data.item_name,
-          amount: data.amount,
-        };
-
-        await nextTick();
-
-        const element = document.querySelector("#invoice-template");
-        if (!element) {
-          alert("Invoice template not found. Please check your template.");
-          return;
-        }
-
-        element.style.display = "block";
-
-        await html2pdf()
-          .from(element)
-          .set({
-            margin: 1,
-            filename: `Invoice-${data.borrower_name}.pdf`,
-            html2canvas: { scale: 2 },
-            jsPDF: { orientation: "portrait" },
-          })
-          .save();
-
-        element.style.display = "none";
-      } catch (error) {
-        alert("Failed to generate PDF. Please try again.");
-      }
-    };
-
-    const sortBy = (key) => {
-      if (sortKey.value === key) {
-        sortOrder.value = -sortOrder.value;
-      } else {
-        sortKey.value = key;
-        sortOrder.value = 1;
-      }
-      Borrow.value.sort((a, b) => {
-        if (a[key] < b[key]) return -sortOrder.value;
-        if (a[key] > b[key]) return sortOrder.value;
-        return 0;
-      });
-    };
-
-    onMounted(() => {
-      fetchData();
-    });
-
-    return {
-      Borrow,
-      error,
-      loading,
-      selectedRow,
-      invoiceData,
-      sortBy,
-      exportRowToPDF, // Pastikan fungsi ini disertakan di return
-    };
-  },
-};
-</script>
-
 <template>
-  <div class="mt-10">
-    <h1 class="font-bold text-3xl mb-4 text-center text-white">Invoice</h1>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-4">Invoice</h1>
 
+    <!-- Error state -->
     <div v-if="error" class="text-red-500 text-center mb-4">
       {{ error }}
     </div>
 
+    <!-- Loading state -->
     <div v-if="loading" class="text-center text-lg">
       Loading data, please wait...
     </div>
 
-    <div class="text-right mb-4">
-      <button
-        v-if="selectedRow"
-        @click="exportToPDF"
-        class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-700 transition duration-200"
-      >
-        Download PDF
-      </button>
+    <!-- Table -->
+    <div v-if="!loading && Borrow.length" class="overflow-x-auto">
+      <table class="min-w-full bg-white border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-6 py-3 text-center border border-gray-300">No</th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Nama Alat
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">Jumlah</th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Tanggal Peminjaman
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Tanggal Pengembalian
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Peminjam
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Teknisi
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(transaction, index) in Borrow" :key="transaction._id">
+            <td class="border px-4 py-2 text-center">{{ index + 1 }}</td>
+            <td class="border px-4 py-2 text-center">
+              <div v-for="item in transaction.items" :key="item.item_id">
+                {{ item.item_name }}
+              </div>
+            </td>
+            <td class="border px-4 py-2 text-center">
+              <div v-for="item in transaction.items" :key="item.item_id">
+                {{ item.amount }}
+              </div>
+            </td>
+            <td class="border px-4 py-2 text-center">
+              {{ transaction.borrow_date }}
+            </td>
+            <td class="border px-4 py-2 text-center">
+              {{ transaction.return_date }}
+            </td>
+            <td class="border px-4 py-2 text-center">
+              {{ transaction.borrower_name }}
+            </td>
+            <td class="border px-4 py-2 text-center">
+              {{ transaction.officer_name }}
+            </td>
+            <td class="border px-4 py-2 text-center">
+              <button
+                @click="exportRowToPDF(transaction)"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Download PDF
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <table
-      class="table-fixed border border-black border-separate bg-white w-full text-center rounded-xl p-4 md:text-xl text-sm"
+    <!-- Empty state -->
+    <div
+      v-if="!loading && !Borrow.length"
+      class="text-center text-gray-500 dark:text-gray-400"
     >
-      <thead>
-        <tr>
-          <th @click="sortBy('index')" class="hover:cursor-pointer">No</th>
-          <th @click="sortBy('item_name')" class="hover:cursor-pointer">
-            Nama Alat
-          </th>
-          <th @click="sortBy('amount')" class="hover:cursor-pointer">Jumlah</th>
-          <th @click="sortBy('borrow_date')" class="hover:cursor-pointer">
-            Tanggal Peminjaman
-          </th>
-          <th @click="sortBy('return_date')" class="hover:cursor-pointer">
-            Tanggal Pengembalian
-          </th>
-          <th @click="sortBy('borrower_name')" class="hover:cursor-pointer">
-            Peminjam
-          </th>
-          <th @click="sortBy('officer_name')" class="hover:cursor-pointer">
-            Teknisi
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-  <tr
-    v-for="(borrowed, index) in Borrow"
-    :key="borrowed._id"
-    class="hover:bg-gray-200 cursor-pointer"
-  >
-    <td>{{ index + 1 }}</td>
-    <td>{{ borrowed.item_name }}</td>
-    <td>{{ borrowed.amount }}</td>
-    <td>{{ borrowed.borrow_date }}</td>
-    <td>{{ borrowed.return_date }}</td>
-    <td>{{ borrowed.borrower_name }}</td>
-    <td>{{ borrowed.officer_name }}</td>
-    <td>
-      <!-- Pastikan pemanggilan fungsi ini mengacu pada fungsi yang sudah diekspor -->
-      <button
-        @click="exportRowToPDF(borrowed._id)"
-        class="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-700 transition duration-200"
-      >
-        Download PDF
-      </button>
-    </td>
-  </tr>
-</tbody>
-
-
-    </table>
-
-    <div id="invoice-template" ref="invoice" style="display: none">
-      <div style="display: flex; align-items: center; margin: 1rem">
-        <img src="../assets/logo.png" alt="logo" class="w-52" />
-      </div>
-      <div class="text-center text-3xl font-bold">Invoice</div>
-      <div class="text-center text-3xl font-bold mb-3">Peminjaman Alat</div>
-      <div class="text-left text-md m-10">
-        <table class="text-left">
-          <tbody>
-            <tr>
-              <td class="py-2">Peminjam:</td>
-              <td class="px-6 py-2">{{ invoiceData.borrower_name }}</td>
-            </tr>
-            <tr>
-              <td class="py-2">Teknisi:</td>
-              <td class="px-6 py-2">{{ invoiceData.officer_name }}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <table
-          class="table-auto w-full text-left border-collapse mt-8"
-          style="border: 1px solid black"
-        >
-          <thead style="border: 1px solid black">
-            <tr>
-              <th class="border px-4 py-2">Nama Alat</th>
-              <th class="border px-4 py-2">Jumlah</th>
-              <th class="border px-4 py-2">Tanggal Peminjaman</th>
-              <th class="border px-4 py-2">Tanggal Pengembalian</th>
-            </tr>
-          </thead>
-          <tbody style="border: 1px solid black">
-            <tr>
-              <td class="border px-4 py-2">{{ invoiceData.item_name }}</td>
-              <td class="border px-4 py-2">{{ invoiceData.amount }}</td>
-              <td class="border px-4 py-2">{{ invoiceData.borrow_date }}</td>
-              <td class="border px-4 py-2">{{ invoiceData.return_date }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- <div class="text-left text-md m-10">
-        <p>Thank you for using our borrowing service. Below are the details of the items you have borrowed. Please ensure to return the items by the specified return date to avoid any late fees. If you have any questions or need further assistance, feel free to contact our support team.</p>
-        <p>We hope you have a great experience with our service!</p>
-      </div> -->
-
-      <div class="text-end text-md mt-20 mr-6 mb-4">
-        <p>Kepala Divisi Teknisi</p>
-        <p>Surabaya, Indonesia</p>
-        <div class="flex justify-end mt-4">
-          <img src="../assets/signature.png" alt="signature" class="w-32" />
-        </div>
-        <p>(Aiman Ahmad Oetarto)</p>
-        <p>Invoice dibuat pada tanggal {{ new Date().toLocaleDateString() }}</p>
-      </div>
+      Tidak ada data peminjaman yang tersedia.
     </div>
-  </div>
-  <div class="text-center text-lg mb-4 mt-4 text-gray-300">
-    Pilih baris untuk dicetak
   </div>
 </template>
+
+<script>
+import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
+export default {
+  name: "SummaryPage",
+  data() {
+    return {
+      Borrow: [],
+      error: "",
+      loading: true,
+    };
+  },
+  methods: {
+    async fetchData() {
+      this.loading = true;
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/borrow`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.data && response.data.data) {
+          this.Borrow = response.data.data;
+        } else {
+          this.error = "Data not in expected format.";
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        this.error = "Error fetching data. Please try again later.";
+      } finally {
+        this.loading = false;
+      }
+    },
+    exportRowToPDF(transaction) {
+      const doc = new jsPDF();
+      doc.text("Invoice", 14, 10);
+
+      // Detail Informasi
+      doc.text(`Peminjam: ${transaction.borrower_name}`, 14, 20);
+      doc.text(`Teknisi: ${transaction.officer_name}`, 14, 30);
+      doc.text(`Tanggal Peminjaman: ${transaction.borrow_date}`, 14, 40);
+      doc.text(`Tanggal Pengembalian: ${transaction.return_date}`, 14, 50);
+
+      // Tabel Data Alat
+      const tableColumn = ["Nama Alat", "Jumlah"];
+      const tableRows = transaction.items.map((item) => [
+        item.item_name,
+        item.amount,
+      ]);
+
+      doc.autoTable({
+        startY: 60,
+        head: [tableColumn],
+        body: tableRows,
+      });
+
+      // Unduh PDF
+      doc.save(`Invoice_${transaction.borrower_name}.pdf`);
+    },
+  },
+  mounted() {
+    this.fetchData();
+  },
+};
+</script>
+
+<style scoped>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+th {
+  background-color: #f2f2f2;
+}
+</style>
