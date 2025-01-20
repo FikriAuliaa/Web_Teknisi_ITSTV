@@ -54,6 +54,7 @@ export class BorrowController {
   public async BorrowItem(req: Request, res: Response) {
     try {
       const borrowData = req.body; // Expecting { borrowedItems: [{ item_id, amount }], other general data }
+      console.log("Data Received:", borrowData); // Debugging log
       const borrowServices = new BorrowServices();
       const borrowed = await borrowServices.BorrowItem(borrowData, borrowData);
       res.status(200).json({

@@ -27,7 +27,7 @@ class BorrowServices {
       throw new Error("Return date must be in the future.");
     }
 
-    const borrowRecords = [];
+    const itemsToSave = [];
 
     for (const itemData of borrowedItems) {
       const { item_id, amount } = itemData;
@@ -52,18 +52,22 @@ class BorrowServices {
       item.amount = (currentStock - requestedAmount).toString();
       await item.save();
 
-      // Create borrow record
-      borrowRecords.push({
-        ...generalData,
+      // Add to itemsToSave
+      itemsToSave.push({
+        item_id,
         item_name: item.name,
         amount: requestedAmount.toString(),
-        return_date: returnDate,
       });
     }
 
-    // Save all borrow records
-    const borrowed = await Borrowed.insertMany(borrowRecords);
-    return borrowed;
+    // Create borrow record
+    const borrowed = new Borrowed({
+      ...generalData,
+      items: itemsToSave, // Save items array
+      is_returned: false,
+    });
+
+    return await borrowed.save();
   }
 
   async ReturnItem(borrowId: string) {
@@ -71,7 +75,7 @@ class BorrowServices {
     const borrowed = await Borrowed.findById(borrowId);
 
     if (!borrowed) {
-      throw new Error("Borrowed item not found :(");
+      throw new Error("Borrowed transaction not found :(");
     }
 
     // Check if already returned

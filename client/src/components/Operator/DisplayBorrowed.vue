@@ -26,12 +26,14 @@ export default {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+        console.log("Borrowed Items:", result.data); // Debug log
         if (result.data && result.data.data) {
           borrowedItems.value = result.data.data;
         } else {
           error.value = "Data not in expected format.";
         }
       } catch (err) {
+        console.error("Error fetching borrowed items:", err); // Debug log
         error.value = "Error fetching data. Please try again later.";
       } finally {
         loading.value = false;
@@ -83,25 +85,35 @@ export default {
         let compareResult = 0;
         switch (sortField.value) {
           case "item_name":
-            compareResult = a.item_name.localeCompare(b.item_name);
+            compareResult = (
+              a.borrowedItems?.[0]?.item_name || ""
+            ).localeCompare(b.borrowedItems?.[0]?.item_name || "");
             break;
           case "amount":
-            compareResult = parseInt(a.amount) - parseInt(b.amount);
+            compareResult =
+              (parseInt(a.borrowedItems?.[0]?.amount) || 0) -
+              (parseInt(b.borrowedItems?.[0]?.amount) || 0);
             break;
           case "borrower_name":
-            compareResult = a.borrower_name.localeCompare(b.borrower_name);
+            compareResult = (a.borrower_name || "").localeCompare(
+              b.borrower_name || ""
+            );
             break;
           case "officer_name":
-            compareResult = a.officer_name.localeCompare(b.officer_name);
+            compareResult = (a.officer_name || "").localeCompare(
+              b.officer_name || ""
+            );
             break;
           case "purpose":
-            compareResult = a.purpose.localeCompare(b.purpose);
+            compareResult = (a.purpose || "").localeCompare(b.purpose || "");
             break;
           case "borrow_date":
-            compareResult = new Date(a.borrow_date) - new Date(b.borrow_date);
+            compareResult =
+              new Date(a.borrow_date || 0) - new Date(b.borrow_date || 0);
             break;
           case "return_date":
-            compareResult = new Date(a.return_date) - new Date(b.return_date);
+            compareResult =
+              new Date(a.return_date || 0) - new Date(b.return_date || 0);
             break;
         }
         return sortDirection.value === "asc" ? compareResult : -compareResult;
@@ -194,30 +206,35 @@ export default {
             :key="item._id"
             class="hover:bg-gray-50 dark:hover:bg-gray-700 group"
           >
-            <td
-              v-for="field in [
-                'item_name',
-                'amount',
-                'borrower_name',
-                'officer_name',
-                'purpose',
-              ]"
-              :key="field"
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
-            >
-              {{ item[field] }}
+            <td class="px-6 py-4">
+              <div v-if="item.borrowedItems && item.borrowedItems.length">
+                <div
+                  v-for="borrowedItem in item.borrowedItems"
+                  :key="borrowedItem.item_id"
+                >
+                  {{ borrowedItem.item_name }} (Jumlah:
+                  {{ borrowedItem.amount }})
+                </div>
+              </div>
+              <div v-else>No items</div>
             </td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
-            >
+
+            <td class="px-6 py-4">
+              {{ item.borrower_name }}
+            </td>
+            <td class="px-6 py-4">
+              {{ item.officer_name }}
+            </td>
+            <td class="px-6 py-4">
+              {{ item.purpose }}
+            </td>
+            <td class="px-6 py-4">
               {{ new Date(item.borrow_date).toLocaleDateString() }}
             </td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
-            >
+            <td class="px-6 py-4">
               {{ new Date(item.return_date).toLocaleDateString() }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <td class="px-6 py-4">
               <button
                 v-if="canBeReturned(item)"
                 @click="returnItem(item._id)"

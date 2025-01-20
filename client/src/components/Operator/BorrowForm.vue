@@ -146,6 +146,7 @@ export default {
             purpose: "",
             borrowedItems: [],
           };
+          showPopup.value = true; // Show the success popup
         }
       } catch (err) {
         console.error("Error submitting form:", err);
@@ -192,6 +193,7 @@ export default {
       amountError,
       goHome,
       addItemToBorrowedList,
+      showPopup,
     };
   },
 };
@@ -422,5 +424,32 @@ export default {
         </button>
       </div>
     </form>
+
+    <!-- Pop-up -->
+    <div
+      v-if="showPopup"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg text-center">
+        <h3 class="text-xl font-bold mb-4">Peminjaman Berhasil</h3>
+        <p class="mb-2">
+          Terima kasih sudah mengisi, jangan lupa konfirmasi ke teknisi.
+        </p>
+        <p class="mb-4">
+          <router-link
+            to="/teknisi"
+            class="text-blue-500 underline hover:text-blue-700"
+          >
+            Lihat kontak teknisi di sini!
+          </router-link>
+        </p>
+        <button
+          @click="showPopup = false"
+          class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Tutup
+        </button>
+      </div>
+    </div>
   </div>
 </template>
