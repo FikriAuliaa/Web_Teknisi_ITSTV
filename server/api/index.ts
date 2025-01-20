@@ -1,9 +1,4 @@
-import express, {
-  Request,
-  Response,
-  NextFunction,
-  RequestHandler,
-} from "express";
+import express, { Request, Response, NextFunction } from "express";
 import connectDB from "../src/db-connection";
 import cors, { CorsOptions } from "cors";
 import adminRouter from "../src/routes/admin.route";
