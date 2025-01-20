@@ -13,43 +13,23 @@ export interface BorrowInter {
 }
 
 const BorrowSchema = new mongoose.Schema({
-  item_name: {
-    type: String,
-    required: true,
-  },
-  amount: {
-    type: String,
-    required: true,
-  },
-  borrow_date: {
-    type: Date,
-    default: new Date(),
-  },
-  return_date: {
-    type: Date,
-    required: true, // This field is required
-  },
-  borrower_name: {
-    type: String,
-    required: true,
-  },
-  officer_name: {
-    type: String,
-    required: true,
-  },
-  is_returned: {
-    type: Boolean,
-    default: null,
-  },
-  kategori: {
-    type: String,
-    default: "Lain-lain", // Set default value
-    required: true, // Ensure it is always provided
-  },
-  purpose: {
-    type: String,
-    required: true, // Ensure purpose is provided
-  },
+  items: [
+    {
+      item_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Items",
+        required: true,
+      },
+      item_name: { type: String, required: true },
+      amount: { type: String, required: true },
+    },
+  ],
+  borrow_date: { type: Date, default: new Date() },
+  return_date: { type: Date, required: true },
+  borrower_name: { type: String, required: true },
+  officer_name: { type: String, required: true },
+  is_returned: { type: Boolean, default: false },
+  purpose: { type: String, required: true },
 });
 
 const Borrowed = mongoose.model("Borrowed", BorrowSchema);

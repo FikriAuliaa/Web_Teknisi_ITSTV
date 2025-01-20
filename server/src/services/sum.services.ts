@@ -1,5 +1,4 @@
 import Borrowed from "../models/sum.models";
-import { BorrowInter } from "../models/sum.models";
 import Items from "../models/admin.models";
 
 class BorrowServices {
@@ -11,115 +10,98 @@ class BorrowServices {
     return await Borrowed.findById(borrowId);
   }
 
-  async BorrowItem(borrowData: Partial<BorrowInter>, itemId: string) {
-    // Find the item in the Items collection
-    const item = await Items.findById(itemId);
+  async BorrowItem(
+    borrowData: { borrowedItems: Array<{ item_id: string; amount: string }> },
+    generalData: any
+  ) {
+    const { borrowedItems } = borrowData;
 
-    if (!item) {
-      throw new Error("Item not found :(");
+    if (!borrowedItems || borrowedItems.length === 0) {
+      throw new Error("No items provided for borrowing.");
     }
 
-    // Ensure the item_name in borrowData matches the item name in the database
-    if (borrowData.item_name && borrowData.item_name !== item.name) {
-      throw new Error("Item name does not match the database entry :(");
-    }
-
-    // Validate return date
-    if (!borrowData.return_date) {
-      throw new Error("Return date is required :(");
-    }
-
-    const returnDate = new Date(borrowData.return_date);
     const now = new Date();
+    const returnDate = new Date(generalData.return_date);
 
     if (returnDate <= now) {
-      throw new Error("Return date must be in the future :(");
+      throw new Error("Return date must be in the future.");
     }
 
-    // Convert amounts to numbers and validate
-    const borrowAmount = parseInt(borrowData.amount || "0", 10);
-    const currentStock = parseInt(item.amount || "0", 10);
+    const borrowRecords = [];
 
-    // Validate amounts
-    if (isNaN(borrowAmount) || borrowAmount <= 0) {
-      throw new Error("Invalid borrow amount :(");
-    }
+    for (const itemData of borrowedItems) {
+      const { item_id, amount } = itemData;
 
-    if (isNaN(currentStock)) {
-      throw new Error("Invalid item stock :(");
-    }
+      // Find item in the Items collection
+      const item = await Items.findById(item_id);
 
-    // Check if enough stock is available
-    if (currentStock < borrowAmount) {
-      throw new Error(
-        `Not enough stock available :( (Available: ${currentStock}, Requested: ${borrowAmount})`
-      );
-    }
+      if (!item) {
+        throw new Error(`Item with ID ${item_id} not found.`);
+      }
 
-    // Calculate new stock amount
-    const newStock = currentStock - borrowAmount;
+      const requestedAmount = parseInt(amount, 10);
+      const currentStock = parseInt(item.amount || "0", 10);
 
-    try {
-      // Update item stock in database
-      await Items.findByIdAndUpdate(itemId, { amount: newStock.toString() });
+      if (requestedAmount <= 0 || currentStock < requestedAmount) {
+        throw new Error(
+          `Insufficient stock for item ${item.name}. Available: ${currentStock}, Requested: ${requestedAmount}.`
+        );
+      }
 
-      // Create and save borrow record
-      const borrowed = new Borrowed({
-        ...borrowData,
+      // Update stock
+      item.amount = (currentStock - requestedAmount).toString();
+      await item.save();
+
+      // Create borrow record
+      borrowRecords.push({
+        ...generalData,
+        item_name: item.name,
+        amount: requestedAmount.toString(),
         return_date: returnDate,
       });
-
-      return await borrowed.save();
-    } catch (error) {
-      // If saving fails, rollback the stock update
-      await Items.findByIdAndUpdate(itemId, {
-        amount: currentStock.toString(),
-      });
-      throw new Error("Failed to process borrow transaction :(");
     }
+
+    // Save all borrow records
+    const borrowed = await Borrowed.insertMany(borrowRecords);
+    return borrowed;
   }
 
   async ReturnItem(borrowId: string) {
-    // Find the borrowed item
+    // Find the borrowed transaction
     const borrowed = await Borrowed.findById(borrowId);
 
     if (!borrowed) {
       throw new Error("Borrowed item not found :(");
     }
 
-    // Find the item in Items collection
-    const item = await Items.findOne({ name: borrowed.item_name });
-
-    if (!item) {
-      throw new Error("Item not found :(");
-    }
-
     // Check if already returned
     if (borrowed.is_returned === true) {
-      throw new Error("Item already returned :(");
+      throw new Error("All items in this transaction are already returned :(");
     }
 
-    // Convert amounts to numbers
-    const borrowAmount = parseInt(borrowed.amount || "0", 10);
-    const stock = parseInt(item.amount || "0", 10);
+    // Iterate over all items in the transaction
+    for (const borrowedItem of borrowed.items) {
+      const { item_id, amount } = borrowedItem;
 
-    try {
-      // Update item stock
-      item.amount = (stock + borrowAmount).toString();
-      await item.save();
+      // Find the item in Items collection
+      const item = await Items.findById(item_id);
 
-      // Update borrowed record
-      borrowed.is_returned = true;
-      borrowed.return_date = new Date(); // Keep this for record
-      return await borrowed.save();
-    } catch (error) {
-      // Rollback if something fails
-      if (item) {
-        item.amount = stock.toString();
-        await item.save();
+      if (!item) {
+        throw new Error(`Item with ID ${item_id} not found.`);
       }
-      throw new Error("Failed to process return transaction :(");
+
+      // Update stock
+      const returnAmount = parseInt(amount, 10);
+      const currentStock = parseInt(item.amount || "0", 10);
+
+      item.amount = (currentStock + returnAmount).toString();
+      await item.save();
     }
+
+    // Mark transaction as returned
+    borrowed.is_returned = true;
+    borrowed.return_date = new Date();
+    return await borrowed.save();
   }
 }
 

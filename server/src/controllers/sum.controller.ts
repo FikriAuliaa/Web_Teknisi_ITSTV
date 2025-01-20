@@ -53,13 +53,12 @@ export class BorrowController {
 
   public async BorrowItem(req: Request, res: Response) {
     try {
-      const borrowData = req.body;
-      const itemId = req.params.id;
+      const borrowData = req.body; // Expecting { borrowedItems: [{ item_id, amount }], other general data }
       const borrowServices = new BorrowServices();
-      const borrowed = await borrowServices.BorrowItem(borrowData, itemId);
+      const borrowed = await borrowServices.BorrowItem(borrowData, borrowData);
       res.status(200).json({
         status: "success",
-        message: "Item borrowed successfully",
+        message: "Items borrowed successfully",
         data: borrowed,
       });
     } catch (error) {
@@ -67,13 +66,13 @@ export class BorrowController {
         res.status(400).json({
           status: "failed",
           message: error.message,
-          data: {},
+          data: [],
         });
       } else {
         res.status(500).json({
           status: "failed",
-          message: "Internal server error while borrowing item",
-          data: {},
+          message: "Internal server error while borrowing items",
+          data: [],
         });
       }
     }
