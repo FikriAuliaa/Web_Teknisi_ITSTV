@@ -104,7 +104,7 @@ export default {
       this.loading = true;
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/borrow`,
+          `${import.meta.env.VITE_API_BASE_URL}borrow`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
