@@ -19,7 +19,6 @@
             <th class="px-6 py-3 text-center border border-gray-300">
               Nama Alat
             </th>
-            <th class="px-6 py-3 text-center border border-gray-300">Jumlah</th>
             <th class="px-6 py-3 text-center border border-gray-300">
               Tanggal Peminjaman
             </th>
@@ -41,11 +40,6 @@
             <td class="border px-4 py-2 text-center">
               <div v-for="item in transaction.items" :key="item.item_id">
                 {{ item.item_name }}
-              </div>
-            </td>
-            <td class="border px-4 py-2 text-center">
-              <div v-for="item in transaction.items" :key="item.item_id">
-                {{ item.amount }}
               </div>
             </td>
             <td class="border px-4 py-2 text-center">
