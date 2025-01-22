@@ -107,7 +107,7 @@ export default {
       formData.value.borrowedItems.push({
         item_id: selectedItem.value._id,
         item_name: selectedItem.value.name,
-        amount: formData.value.amount,
+        amount: 1,
       });
 
       // Reset selected item and amount
@@ -364,7 +364,7 @@ export default {
         </select>
       </div>
 
-      <!-- Jumlah Peminjaman -->
+      <!-- Jumlah Peminjaman
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
           Jumlah Peminjaman
@@ -383,7 +383,7 @@ export default {
         <p v-if="amountError" class="text-red-500 text-xs italic mt-1">
           {{ amountError }}
         </p>
-      </div>
+      </div> -->
 
       <div class="mb-4">
         <button

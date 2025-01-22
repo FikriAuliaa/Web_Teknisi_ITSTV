@@ -88,25 +88,25 @@
       <div style="display: flex; align-items: center; margin: 1rem">
         <img src="../assets/logo.png" alt="logo" class="w-52" />
       </div>
-      <div class="text-center text-3xl font-bold">Borrowing Item</div>
-      <div class="text-center text-3xl font-bold mb-3">Invoice</div>
+      <div class="text-center text-3xl font-bold">Invoice</div>
+      <div class="text-center text-3xl font-bold mb-3">Peminjaman Barang</div>
       <div class="text-left text-md m-10">
         <table class="text-left">
           <tbody>
             <tr>
-              <td class="py-2">Borrower Name:</td>
+              <td class="py-2">Peminjam:</td>
               <td class="px-6 py-2">{{ selectedTransaction.borrower_name }}</td>
             </tr>
             <tr>
-              <td class="py-2">Operator:</td>
+              <td class="py-2">Teknisi:</td>
               <td class="px-6 py-2">{{ selectedTransaction.officer_name }}</td>
             </tr>
             <tr>
-              <td class="py-2">Borrow Date:</td>
+              <td class="py-2">Tanggal Peminjaman:</td>
               <td class="px-6 py-2">{{ selectedTransaction.borrow_date }}</td>
             </tr>
             <tr>
-              <td class="py-2">Return Date:</td>
+              <td class="py-2">Tanggal Pengembalian:</td>
               <td class="px-6 py-2">{{ selectedTransaction.return_date }}</td>
             </tr>
           </tbody>
@@ -118,40 +118,24 @@
         >
           <thead style="border: 1px solid black">
             <tr>
-              <th class="border px-4 py-2">Item Name</th>
-              <th class="border px-4 py-2">Amount</th>
+              <th class="border px-4 py-2">Nama Barang</th>
             </tr>
           </thead>
           <tbody style="border: 1px solid black">
             <tr v-for="item in selectedTransaction.items" :key="item.item_id">
               <td class="border px-4 py-2">{{ item.item_name }}</td>
-              <td class="border px-4 py-2">{{ item.amount }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-
-      <div class="text-left text-md m-10">
-        <p>
-          Thank you for using our borrowing service. Below are the details of
-          the items you have borrowed. Please ensure to return the items by the
-          specified return date to avoid any late fees. If you have any
-          questions or need further assistance, feel free to contact our support
-          team.
-        </p>
-        <p>We hope you have a great experience with our service!</p>
-      </div>
-
       <div class="text-end text-md mt-20 mr-6 mb-4">
-        <p>Signature</p>
-        <p>Admin</p>
-        <p>Lab KCKS</p>
+        <p>Kepala Divisi Teknisi</p>
         <p>Surabaya, Indonesia</p>
         <div class="flex justify-end mt-4">
           <img src="../assets/signature.png" alt="signature" class="w-32" />
         </div>
-        <p>(Agus Setiawan)</p>
-        <p>Invoice generated on {{ new Date().toLocaleDateString() }}</p>
+        <p>(Aiman Ahmad O.)</p>
+        <p>Invoice dibuat pada {{ new Date().toLocaleDateString() }}</p>
       </div>
     </div>
   </div>
