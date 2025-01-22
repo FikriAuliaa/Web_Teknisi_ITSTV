@@ -1,7 +1,5 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-4">Invoice</h1>
-
     <!-- Error State -->
     <div v-if="error" class="text-red-500 text-center mb-4">
       {{ error }}
