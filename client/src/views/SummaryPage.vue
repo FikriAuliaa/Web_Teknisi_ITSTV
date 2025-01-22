@@ -56,7 +56,6 @@
             <td class="border px-4 py-2 text-center">
               {{ formatDate(transaction.return_date) }}
             </td>
-
             <td class="border px-4 py-2 text-center">
               {{ transaction.borrower_name }}
             </td>
@@ -175,15 +174,22 @@ export default {
   methods: {
     formatDate(dateString) {
       if (!dateString) return "N/A"; // Handle null or undefined dates
-      const options = {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZoneName: "short",
-      };
-      return new Date(dateString).toLocaleDateString(undefined, options);
+      try {
+        const date = new Date(dateString);
+        if (isNaN(date)) throw new Error("Invalid date format");
+        return date.toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          timeZone: "UTC", // Adjust based on your time zone needs
+        });
+      } catch (error) {
+        console.error("Error formatting date:", error);
+        return "Invalid Date";
+      }
     },
 
     async fetchData() {
@@ -199,8 +205,8 @@ export default {
         );
         this.Borrow = response.data.data.map((transaction) => ({
           ...transaction,
-          borrow_date: this.formatDate(transaction.borrow_date),
-          return_date: this.formatDate(transaction.return_date),
+          borrow_date: transaction.borrow_date,
+          return_date: transaction.return_date,
         }));
       } catch (error) {
         this.error = "Failed to fetch data. Please try again later.";
@@ -210,7 +216,11 @@ export default {
     },
 
     exportToPDF(transaction) {
-      this.selectedTransaction = transaction;
+      this.selectedTransaction = {
+        ...transaction,
+        borrow_date: this.formatDate(transaction.borrow_date),
+        return_date: this.formatDate(transaction.return_date),
+      };
 
       this.$nextTick(() => {
         const element = document.getElementById("invoice-template");
