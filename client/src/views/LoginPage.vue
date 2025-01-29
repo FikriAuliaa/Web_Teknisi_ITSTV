@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="min-h-screen flex flex-col justify-center items-center bg-gray-100"
-  >
+  <div class="min-h-screen flex flex-col justify-center items-center">
     <!-- Form box -->
     <div class="form-box w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
       <header>Login</header>
