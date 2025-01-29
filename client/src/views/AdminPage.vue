@@ -27,9 +27,7 @@ export default {
 <template>
   <div>
     <div class="mb-4 mt-10">
-      <h1
-        class="font-bold text-3xl mb-2 text-center text-black md:text-slate-50"
-      >
+      <h1 class="font-bold text-3xl mb-2 text-center text-black">
         Daftar alat tersedia
       </h1>
       <FullView />

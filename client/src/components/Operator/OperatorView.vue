@@ -109,17 +109,17 @@ export default {
       <div
         v-for="operator in operators"
         :key="operator._id"
-        class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col h-full"
+        class="bg-white border border-gray-200 rounded-lg shado flex flex-col h-full"
       >
         <div class="flex flex-col items-center pb-10 mt-6">
-          <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+          <h5 class="mb-1 text-xl font-medium text-gray-900">
             {{ operator.name }}
           </h5>
-          <span class="text-sm text-gray-500 dark:text-gray-400">
+          <span class="text-sm text-gray-500">
             {{ operator.Email }}
           </span>
 
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+          <p class="text-sm text-gray-500">
             {{ operator.NoTelp }}
           </p>
           <div class="flex mt-4 md:mt-6">

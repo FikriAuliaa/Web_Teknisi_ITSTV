@@ -120,7 +120,7 @@ export default {
     <div class="mb-5">
       <label
         for="filter-category"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        class="block mb-2 text-sm font-medium text-gray-900"
         >Filter by Category</label
       >
       <select
@@ -147,7 +147,7 @@ export default {
       <div
         v-for="item in filteredItems"
         :key="item._id"
-        class="relative rounded-lg shadow mb-5 bg-neutral-900 hover:border-current transition-all hover:bg-gray-800 break-inside-avoid"
+        class="relative rounded-lg shadow mb-5 bg-grey-500 hover:border-current transition-all hover:bg-gray-300 break-inside-avoid"
       >
         <div class="absolute top-3 right-3 z-10">
           <button
@@ -176,21 +176,13 @@ export default {
         </div>
 
         <div class="p-5">
-          <h5
-            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-          >
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
             {{ item.name }}
           </h5>
-          <p class="text-xl text-gray-700 dark:text-gray-400">
-            Amount: {{ item.amount }}
-          </p>
-          <p class="text-xl text-gray-700 dark:text-gray-400">
-            Condition: {{ item.condition }}
-          </p>
-          <p class="text-xl text-gray-700 dark:text-gray-400">
-            Category: {{ item.kategori }}
-          </p>
-          <p class="text-xl text-gray-700 dark:text-gray-400">
+          <p class="text-xl text-gray-700">Amount: {{ item.amount }}</p>
+          <p class="text-xl text-gray-700">Condition: {{ item.condition }}</p>
+          <p class="text-xl text-gray-700">Category: {{ item.kategori }}</p>
+          <p class="text-xl text-gray-700">
             Registered At: {{ item.created_at }}
           </p>
         </div>

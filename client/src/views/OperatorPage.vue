@@ -26,7 +26,7 @@ export default {
 
 <template>
   <div class="mt-10 mb-4">
-    <h1 class="font-bold text-3xl mb-2 text-center text-black md:text-slate-50">
+    <h1 class="font-bold text-3xl mb-2 text-center text-black">
       Daftar Teknisi
     </h1>
     <OperatorView />
