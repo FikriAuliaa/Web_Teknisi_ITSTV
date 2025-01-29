@@ -9,8 +9,8 @@
         </h1>
       </div>
 
-      <!-- Navigation and User Info -->
-      <div class="flex items-center space-x-6">
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center space-x-6">
         <!-- Aturan Peminjaman -->
         <router-link
           :to="rulesNavigationTarget"
@@ -50,6 +50,56 @@
           Logout
         </button>
       </div>
+
+      <!-- Mobile Menu Button -->
+      <button @click="toggleMenu" class="md:hidden p-2">
+        <svg
+          class="w-8 h-8 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div v-show="menuOpen" class="md:hidden bg-[#213555] text-white py-2">
+      <router-link
+        :to="rulesNavigationTarget"
+        v-if="showRulesButton"
+        class="block px-4 py-2 hover:bg-blue-700"
+      >
+        {{
+          isOnRulesPage
+            ? role !== "Guest"
+              ? "Back to Dashboard"
+              : "Back to Home"
+            : "Aturan Peminjaman"
+        }}
+      </router-link>
+
+      <div v-if="username && role" class="px-4 py-2 border-t border-gray-600">
+        <span class="block font-medium capitalize">{{ username }}</span>
+        <span class="block text-gray-300 text-xs">
+          as {{ role === "operator" ? "crew" : role }}
+        </span>
+      </div>
+
+      <button
+        v-if="username !== 'Guest'"
+        @click="logout"
+        class="block w-full text-left px-4 py-2 bg-red-600 hover:bg-red-700 transition"
+      >
+        Logout
+      </button>
     </div>
   </nav>
 </template>
@@ -65,6 +115,7 @@ export default defineComponent({
     const role = ref("Guest");
     const route = useRoute();
     const router = useRouter();
+    const menuOpen = ref(false);
 
     // Tentukan apakah saat ini berada di halaman login
     const isOnLoginPage = computed(() => route.path === "/");
@@ -73,9 +124,7 @@ export default defineComponent({
     const isOnRulesPage = computed(() => route.path === "/rules");
 
     // Tentukan apakah tombol "Aturan Peminjaman" harus ditampilkan
-    const showRulesButton = computed(() => {
-      return true;
-    });
+    const showRulesButton = computed(() => true);
 
     // Tentukan target navigasi tombol di halaman Rules
     const rulesNavigationTarget = computed(() => {
@@ -111,6 +160,11 @@ export default defineComponent({
       router.push("/"); // Kembali ke halaman login
     };
 
+    // Fungsi toggle menu
+    const toggleMenu = () => {
+      menuOpen.value = !menuOpen.value;
+    };
+
     return {
       username,
       role,
@@ -119,6 +173,8 @@ export default defineComponent({
       showRulesButton,
       rulesNavigationTarget,
       logout,
+      menuOpen,
+      toggleMenu,
     };
   },
 });
@@ -131,9 +187,9 @@ nav {
 }
 
 .container {
-  max-width: 1200px; /* Membatasi lebar maksimum */
-  margin: 0 auto; /* Memusatkan elemen */
-  padding: 0 20px; /* Menambahkan padding di kiri dan kanan */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 nav a {
@@ -151,7 +207,7 @@ img {
 /* Responsif untuk layar kecil */
 @media (max-width: 768px) {
   .container {
-    padding: 0 10px; /* Kurangi padding pada layar kecil */
+    padding: 0 10px;
   }
 
   nav .container {
