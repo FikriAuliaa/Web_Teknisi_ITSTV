@@ -7,6 +7,7 @@ body {
   height: 100%;
   overflow-y: auto;
   font-family: "poppins", sans-serif;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
 }
 
 a {
