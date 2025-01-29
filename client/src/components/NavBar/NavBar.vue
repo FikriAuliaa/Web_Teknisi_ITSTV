@@ -4,9 +4,7 @@
       <!-- Logo and Title -->
       <div class="flex items-center space-x-4">
         <img src="../../assets/ITSTV.png" alt="Lab Logo" class="h-10 w-30" />
-        <h1 class="text-lg font-bold">
-          FORM PEMINJAMAN ALAT - TEKNISI GEMILANG
-        </h1>
+        <h1 class="text-lg font-bold">FORM PEMINJAMAN ALAT</h1>
       </div>
 
       <!-- Desktop Navigation -->
