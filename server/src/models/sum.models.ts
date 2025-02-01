@@ -8,6 +8,7 @@ export interface BorrowInter {
   borrower_name: string;
   officer_name: string;
   is_returned: boolean | null; // Add this field
+  is_confirmed: boolean | null;
   kategori: string; // Add kategori field
   purpose: string; // Add purpose field
 }
@@ -29,6 +30,7 @@ const BorrowSchema = new mongoose.Schema({
   borrower_name: { type: String, required: true },
   officer_name: { type: String, required: true },
   is_returned: { type: Boolean, default: false },
+  is_confirmed: { type: Boolean, default: false }, // Field baru untuk konfirmasi admin
   purpose: { type: String, required: true },
 });
 

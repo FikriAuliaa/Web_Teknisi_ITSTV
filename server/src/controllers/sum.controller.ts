@@ -105,6 +105,33 @@ export class BorrowController {
       }
     }
   }
+
+  public async ConfirmReturn(req: Request, res: Response) {
+    try {
+      const borrowId = req.params.id;
+      const borrowServices = new BorrowServices();
+      const borrowed = await borrowServices.ConfirmReturn(borrowId);
+      res.status(200).json({
+        status: "success",
+        message: "Item confirmed as returned by admin",
+        data: borrowed,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({
+          status: "failed",
+          message: error.message,
+          data: {},
+        });
+      } else {
+        res.status(500).json({
+          status: "failed",
+          message: "Error confirming return",
+          data: {},
+        });
+      }
+    }
+  }
 }
 
 export default new BorrowController();
