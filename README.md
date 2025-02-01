@@ -102,7 +102,7 @@ type Operators = {
     ```
 5. Set up the database and configure environment variables. Make an .env file in /server directory
     ```bash
-    DATABASE_URI=mongodb+srv://fikriaulia:DepotTaria14@cluster0.xkzlj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    DATABASE_URI=mongodb+srv://TeknisiGemilang:teknisiangkatangkat@peminjamanalat.odqtw.mongodb.net/?retryWrites=true&w=majority&appName=PeminjamanAlat
     JWT_SECRET=1t5tv3ur3k4
     PORT=5000
     ```
