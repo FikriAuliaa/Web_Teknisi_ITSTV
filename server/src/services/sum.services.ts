@@ -10,10 +10,7 @@ class BorrowServices {
     return await Borrowed.findById(borrowId);
   }
 
-  async BorrowItem(
-    borrowData: { borrowedItems: Array<{ item_id: string; amount: string }> },
-    generalData: any
-  ) {
+  async BorrowItem(borrowData: { borrowedItems: Array<{ item_id: string; amount: string }> }, generalData: any) {
     const { borrowedItems } = borrowData;
 
     if (!borrowedItems || borrowedItems.length === 0) {
@@ -43,9 +40,7 @@ class BorrowServices {
       const currentStock = parseInt(item.amount || "0", 10);
 
       if (requestedAmount <= 0 || currentStock < requestedAmount) {
-        throw new Error(
-          `Insufficient stock for item ${item.name}. Available: ${currentStock}, Requested: ${requestedAmount}.`
-        );
+        throw new Error(`Insufficient stock for item ${item.name}. Available: ${currentStock}, Requested: ${requestedAmount}.`);
       }
 
       // Update stock
@@ -105,6 +100,24 @@ class BorrowServices {
     // Mark transaction as returned
     borrowed.is_returned = true;
     borrowed.return_date = new Date();
+    return await borrowed.save();
+  }
+
+  // sum.services.ts
+  async ConfirmReturn(borrowId: string) {
+    const borrowed = await Borrowed.findById(borrowId);
+
+    if (!borrowed) {
+      throw new Error("Transaction not found.");
+    }
+
+    // Pastikan item sudah dikembalikan (is_returned)
+    if (!borrowed.is_returned) {
+      throw new Error("Item has not been returned yet.");
+    }
+
+    // Set status konfirmasi ke true
+    borrowed.is_confirmed = true;
     return await borrowed.save();
   }
 }

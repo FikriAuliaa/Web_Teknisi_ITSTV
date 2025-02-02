@@ -38,10 +38,8 @@ export default {
         });
         if (result.data && result.data.data) {
           Items.value = result.data.data.map((item) => {
-            if (!(item._id in loadingStates.value))
-              loadingStates.value[item._id] = true;
-            if (!(item._id in dropdownStates.value))
-              dropdownStates.value[item._id] = false;
+            if (!(item._id in loadingStates.value)) loadingStates.value[item._id] = true;
+            if (!(item._id in dropdownStates.value)) dropdownStates.value[item._id] = false;
 
             // Tetapkan kategori default jika tidak ada
             const kategori = item.kategori || "Lain-lain";
@@ -86,9 +84,7 @@ export default {
       if (selectedCategory.value === "All") {
         return Items.value;
       }
-      return Items.value.filter(
-        (item) => item.kategori === selectedCategory.value
-      );
+      return Items.value.filter((item) => item.kategori === selectedCategory.value);
     });
 
     onMounted(() => {
@@ -118,16 +114,8 @@ export default {
   <div>
     <!-- Dropdown Filter Kategori -->
     <div class="mb-5">
-      <label
-        for="filter-category"
-        class="block mb-2 text-sm font-medium text-gray-900"
-        >Filter by Category</label
-      >
-      <select
-        id="filter-category"
-        v-model="selectedCategory"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-      >
+      <label for="filter-category" class="block mb-2 text-sm font-medium text-gray-900">Filter by Category</label>
+      <select id="filter-category" v-model="selectedCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         <option value="All">All</option>
         <option value="Kamera">Kamera</option>
         <option value="Lensa">Lensa</option>
@@ -143,35 +131,15 @@ export default {
     </div>
 
     <!-- Item List -->
-    <div class="md:columns-3 columns-1 gap-4 mt-6">
-      <div
-        v-for="item in filteredItems"
-        :key="item._id"
-        class="relative rounded-lg shadow mb-5 bg-grey-500 hover:border-current transition-all hover:bg-gray-300 break-inside-avoid"
-      >
+    <div class="md:columns-4 columns-1 gap-4 mt-6">
+      <div v-for="item in filteredItems" :key="item._id" class="relative rounded-lg shadow mb-5 bg-grey-500 hover:border-current transition-all hover:bg-gray-300 break-inside-avoid">
         <div class="absolute top-3 right-3 z-10">
-          <button
-            @click="toggleDropdown(item._id)"
-            class="bg-gray-700 text-white rounded-full p-2 hover:bg-gray-600 focus:outline-none"
-          >
+          <button @click="toggleDropdown(item._id)" class="bg-gray-700 text-white rounded-full p-2 hover:bg-gray-600 focus:outline-none">
             <i class="pi pi-ellipsis-h"></i>
           </button>
-          <div
-            v-if="dropdownStates[item._id]"
-            class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg"
-          >
-            <button
-              @click="navigateToEditPage(item._id)"
-              class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-700 hover:text-white rounded-lg transition-all delay-150"
-            >
-              Edit
-            </button>
-            <button
-              @click="deleteItem(item._id)"
-              class="transition-all delay-150 block w-full px-4 py-2 text-left bg-transparent hover:bg-red-600 text-rose-600 hover:text-white rounded-lg"
-            >
-              Remove
-            </button>
+          <div v-if="dropdownStates[item._id]" class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg">
+            <button @click="navigateToEditPage(item._id)" class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-700 hover:text-white rounded-lg transition-all delay-150">Edit</button>
+            <button @click="deleteItem(item._id)" class="transition-all delay-150 block w-full px-4 py-2 text-left bg-transparent hover:bg-red-600 text-rose-600 hover:text-white rounded-lg">Remove</button>
           </div>
         </div>
 
@@ -182,9 +150,7 @@ export default {
           <p class="text-xl text-gray-700">Amount: {{ item.amount }}</p>
           <p class="text-xl text-gray-700">Condition: {{ item.condition }}</p>
           <p class="text-xl text-gray-700">Category: {{ item.kategori }}</p>
-          <p class="text-xl text-gray-700">
-            Registered At: {{ item.created_at }}
-          </p>
+          <p class="text-xl text-gray-700">Registered At: {{ item.created_at }}</p>
         </div>
       </div>
     </div>

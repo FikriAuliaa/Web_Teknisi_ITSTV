@@ -214,7 +214,7 @@ export default {
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
-              Actions
+              Status
             </th>
           </tr>
         </thead>
@@ -233,6 +233,13 @@ export default {
                   :key="borrowedItem.item_id"
                 >
                   {{ borrowedItem.item_name }}
+                </div>
+                <div
+                  v-for="borrowedItem in item.items"
+                  :key="borrowedItem.item_id"
+                >
+                  {{ borrowedItem.item_name }} (Jumlah:
+                  {{ borrowedItem.amount }})
                 </div>
               </div>
               <div v-else>No items</div>
@@ -265,13 +272,11 @@ export default {
             <td
               class="px-3 py-2 sm:px-6 sm:py-4 text-center border border-gray-300 text-sm sm:text-base"
             >
-              <button
+              <span
                 v-if="canBeReturned(item)"
-                @click="returnItem(item._id)"
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm md:text-base"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm md:text-base"
+                >Not Return</span
               >
-                Return
-              </button>
               <span v-else class="text-gray-500">Returned</span>
             </td>
           </tr>

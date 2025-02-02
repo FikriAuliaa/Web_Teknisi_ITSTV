@@ -6,9 +6,7 @@
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="text-center text-lg">
-      Loading data, please wait...
-    </div>
+    <div v-if="loading" class="text-center text-lg">Loading data, please wait...</div>
 
     <!-- Table -->
     <div v-if="!loading && Borrow.length" class="overflow-x-auto">
@@ -16,21 +14,11 @@
         <thead class="bg-gray-100">
           <tr>
             <th class="px-6 py-3 text-center border border-gray-300">No</th>
-            <th class="px-6 py-3 text-center border border-gray-300">
-              Nama Alat
-            </th>
-            <th class="px-6 py-3 text-center border border-gray-300">
-              Tanggal Peminjaman
-            </th>
-            <th class="px-6 py-3 text-center border border-gray-300">
-              Tanggal Pengembalian
-            </th>
-            <th class="px-6 py-3 text-center border border-gray-300">
-              Peminjam
-            </th>
-            <th class="px-6 py-3 text-center border border-gray-300">
-              Teknisi
-            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">Nama Alat</th>
+            <th class="px-6 py-3 text-center border border-gray-300">Tanggal Peminjaman</th>
+            <th class="px-6 py-3 text-center border border-gray-300">Tanggal Pengembalian</th>
+            <th class="px-6 py-3 text-center border border-gray-300">Peminjam</th>
+            <th class="px-6 py-3 text-center border border-gray-300">Teknisi</th>
             <th class="px-6 py-3 text-center border border-gray-300">Aksi</th>
           </tr>
         </thead>
@@ -54,13 +42,10 @@
             <td class="border px-4 py-2 text-center">
               {{ transaction.officer_name }}
             </td>
-            <td class="border px-4 py-2 text-center">
-              <button
-                @click="exportToPDF(transaction)"
-                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Download PDF
-              </button>
+            <td class="border px-4 py-2 text-center flex-col lg:flex-row">
+              <button @click="exportToPDF(transaction)" class="bg-blue-500 text-white px-4 py-2 mr-3 rounded hover:bg-blue-700">Download PDF</button>
+              <button v-if="canBeReturned(transaction)" @click="returnItem(transaction._id)" class="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded text-sm md:text-base">Return</button>
+              <span v-else class="text-gray-500 italic">Returned</span>
             </td>
           </tr>
         </tbody>
@@ -68,12 +53,7 @@
     </div>
 
     <!-- Empty State -->
-    <div
-      v-if="!loading && !Borrow.length"
-      class="text-center text-gray-500 dark:text-gray-400"
-    >
-      Tidak ada data peminjaman yang tersedia.
-    </div>
+    <div v-if="!loading && !Borrow.length" class="text-center text-gray-500 dark:text-gray-400">Tidak ada data peminjaman yang tersedia.</div>
 
     <!-- Hidden Invoice Template -->
     <div id="invoice-template" v-if="selectedTransaction" class="hidden">
@@ -104,10 +84,7 @@
           </tbody>
         </table>
 
-        <table
-          class="table-auto w-full text-left border-collapse mt-8"
-          style="border: 1px solid black"
-        >
+        <table class="table-auto w-full text-left border-collapse mt-8" style="border: 1px solid black">
           <thead style="border: 1px solid black">
             <tr>
               <th class="border px-4 py-2">Nama Barang</th>
@@ -171,14 +148,11 @@ export default {
     async fetchData() {
       this.loading = true;
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}borrow`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}borrow`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         this.Borrow = response.data.data.map((transaction) => ({
           ...transaction,
           borrow_date: transaction.borrow_date,
@@ -219,6 +193,27 @@ export default {
             });
         }, 500);
       });
+    },
+
+    async returnItem(borrowId) {
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}borrow/return/${borrowId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        this.fetchData(); // Refresh data setelah konfirmasi berhasil
+      } catch (error) {
+        this.error = error.response?.data?.message || "Error confirming return.";
+      }
+    },
+
+    canBeReturned(transaction) {
+      return !transaction.is_returned;
     },
   },
   mounted() {
