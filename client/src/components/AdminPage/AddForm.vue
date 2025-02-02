@@ -2,11 +2,17 @@
   <div class="overlay">
     <div class="form md:w-2/4 w-5/6">
       <button @click="onClose" class="close-button">X</button>
-      <h1 class="mb-3 text-white text-center md:text-2xl text-xl">Form Pengisian</h1>
+      <h1 class="mb-3 text-white text-center md:text-2xl text-xl">
+        Form Pengisian
+      </h1>
       <form class="max-w-md mx-auto" @submit.prevent="submitForm">
         <!-- Item Name -->
         <div class="mb-5">
-          <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Name</label>
+          <label
+            for="name"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Item Name</label
+          >
           <input
             type="text"
             id="name"
@@ -17,21 +23,13 @@
           />
         </div>
 
-        <div class="mb-5">
-          <label for="pic" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image URL</label>
-          <input
-            type="text"
-            id="pic"
-            v-model="form.pic"
-            placeholder="https://example.com/image.jpg"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            required
-          />
-        </div>
-
         <!-- Amount -->
         <div class="mb-5">
-          <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
+          <label
+            for="amount"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Amount</label
+          >
           <input
             type="number"
             id="amount"
@@ -45,7 +43,11 @@
 
         <!-- Condition -->
         <div class="mb-5">
-          <label for="condition" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Condition</label>
+          <label
+            for="condition"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Condition</label
+          >
           <select
             id="condition"
             v-model="form.condition"
@@ -62,7 +64,11 @@
 
         <!-- Kategori -->
         <div class="mb-5">
-          <label for="kategori" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
+          <label
+            for="kategori"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Kategori</label
+          >
           <select
             id="kategori"
             v-model="form.kategori"
