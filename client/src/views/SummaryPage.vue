@@ -179,9 +179,7 @@ export default {
 
 <template>
   <div class="container mx-auto px-4 py-8 mt-20">
-    <h1 class="font-bold text-3xl mb-2 text-center text-black">
-      Daftar Teknisi
-    </h1>
+    <h1 class="font-bold text-3xl mb-2 text-center text-black">Invoice</h1>
     <!-- Error State -->
     <div v-if="error" class="text-red-500 text-center mb-4">
       {{ error }}
