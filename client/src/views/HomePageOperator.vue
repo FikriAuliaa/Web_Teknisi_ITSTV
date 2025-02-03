@@ -4,7 +4,7 @@
       <h1
         class="text-2xl md:text-4xl font-bold text-center text-gray-900 mb-12"
       >
-        Dashboard Peminjaman Alat
+      Selamat Datang di Dashboard Peminjaman Alat ITS TV!
       </h1>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -36,7 +36,7 @@
               Pinjam Alat
             </h2>
             <p class="text-gray-600">
-              Membuat permintaan peminjaman alat kantor
+              Ajukan Permintaan Alat!
             </p>
           </div>
         </router-link>
@@ -68,7 +68,7 @@
             <h2 class="text-xl font-semibold text-gray-900 mb-2">
               List alat yang dipinjam
             </h2>
-            <p class="text-gray-600">Melihat alat apa yang sedang dipinjam</p>
+            <p class="text-gray-600">Pantau Alat Disini!</p>
           </div>
         </router-link>
 
@@ -97,7 +97,7 @@
               </svg>
             </div>
             <h2 class="text-xl font-semibold text-gray-900 mb-2">List Alat</h2>
-            <p class="text-gray-600">Melihat semua alat yang tersedia</p>
+            <p class="text-gray-600">Jelajahi Pilihan Alat!</p>
           </div>
         </router-link>
       </div>

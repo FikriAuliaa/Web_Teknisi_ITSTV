@@ -192,11 +192,11 @@ export default {
 <template>
   <div class="max-w-2xl mx-auto p-6">
     <div class="mb-4">
-      <button @click="goHome" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Home</button>
+      <button @click="goHome" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Back</button>
     </div>
 
     <form @submit.prevent="submitForm" class="bg-white shadow-md rounded-lg p-8">
-      <h2 class="text-2xl font-bold mb-6 text-gray-800">Peminjaman Alat</h2>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">Form Peminjaman Alat</h2>
 
       <div v-if="error" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
         {{ error }}

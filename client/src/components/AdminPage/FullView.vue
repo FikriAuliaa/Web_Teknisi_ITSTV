@@ -114,7 +114,7 @@ export default {
   <div>
     <!-- Dropdown Filter Kategori -->
     <div class="mb-5">
-      <label for="filter-category" class="block mb-2 text-sm font-medium text-gray-900">Filter by Category</label>
+      <label for="filter-category" class="block mb-2 text-sm font-medium text-gray-900">Pilih Kategori</label>
       <select id="filter-category" v-model="selectedCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         <option value="All">All</option>
         <option value="Kamera">Kamera</option>
@@ -147,10 +147,10 @@ export default {
           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
             {{ item.name }}
           </h5>
-          <p class="text-xl text-gray-700">Amount: {{ item.amount }}</p>
-          <p class="text-xl text-gray-700">Condition: {{ item.condition }}</p>
-          <p class="text-xl text-gray-700">Category: {{ item.kategori }}</p>
-          <p class="text-xl text-gray-700">Registered At: {{ item.created_at }}</p>
+          <p class="text-xl text-gray-700">Jumlah: {{ item.amount }}</p>
+          <p class="text-xl text-gray-700">Kondisi: {{ item.condition }}</p>
+          <p class="text-xl text-gray-700">Kategori: {{ item.kategori }}</p>
+          <p class="text-xl text-gray-700">Alat masuk: {{ item.created_at }}</p>
         </div>
       </div>
     </div>

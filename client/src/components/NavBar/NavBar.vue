@@ -34,7 +34,7 @@
           <div class="text-sm">
             <span class="block font-medium capitalize">{{ username }}</span>
             <span class="block text-gray-300 text-xs">
-              as {{ role === "operator" ? "crew" : role }}
+              Anda login sebagai {{ role === "operator" ? "Kru" : role }}
             </span>
           </div>
         </div>
@@ -87,7 +87,7 @@
       <div v-if="username && role" class="px-4 py-2 border-t border-gray-600">
         <span class="block font-medium capitalize">{{ username }}</span>
         <span class="block text-gray-300 text-xs">
-          as {{ role === "operator" ? "crew" : role }}
+          as {{ role === "operator" ? "Kru" : role }}
         </span>
       </div>
 

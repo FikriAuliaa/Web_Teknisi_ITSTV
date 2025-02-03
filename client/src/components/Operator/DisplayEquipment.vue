@@ -78,16 +78,23 @@ onMounted(fetchEquipments);
   <div class="p-4">
     <!-- Tombol Back -->
     <button
-      class="mb-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
+      class="mb-4 mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
       @click="router.back()"
     >
       Back
     </button>
 
+    <!-- Page Title (Dengan Jarak dari Tombol) -->
+    <h2
+      class="text-xl sm:text-2xl font-bold text-gray-800 text-center w-full mx-auto mb-4"
+    >
+          Katalog Alat Tersedia
+    </h2>
+
     <!-- Filter Kategori -->
     <div class="mb-4">
       <label for="filter-category" class="block font-bold mb-2"
-        >Filter by Category</label
+        >Pilih kategori</label
       >
       <select
         id="filter-category"

@@ -32,7 +32,7 @@
         >
           <option value="" disabled selected>Select Role</option>
           <option value="admin">Admin</option>
-          <option value="operator">Crew</option>
+          <option value="operator">Kru</option>
         </select>
         <i
           class="bx bx-user-circle absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"

@@ -146,9 +146,9 @@ export default {
     <div class="absolute top-4 left-4 md:relative md:top-0 md:left-0">
       <button
         @click="goHome"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm md:text-base w-full md:w-auto"
+        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm md:text-base w-full md:w-auto"
       >
-        Back to Home
+        Back
       </button>
     </div>
 
@@ -156,7 +156,7 @@ export default {
     <h2
       class="text-xl sm:text-2xl font-bold text-gray-800 text-center w-full mx-auto mt-8"
     >
-      Daftar alat sedang dipinjam
+      Daftar Alat Yang Sedang Dipinjam
     </h2>
 
     <!-- Loading State -->
@@ -184,32 +184,32 @@ export default {
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
-              Item Name
+              Nama Alat
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
-              Borrower
+              Peminjam
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
-              Officer
+              Teknisi
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
-              Purpose
+              Keperluan
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
-              Borrow Date
+              Tanggal Peminjaman
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
-              Return Date
+              Tanggal Pengembalian
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
