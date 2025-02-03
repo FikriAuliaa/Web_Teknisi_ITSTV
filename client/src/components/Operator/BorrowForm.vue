@@ -67,7 +67,13 @@ export default {
     };
 
     const filteredItemsByCategory = computed(() =>
-      selectedCategory.value === "All" ? availableItems.value.filter((item) => parseInt(item.amount) > 0) : availableItems.value.filter((item) => parseInt(item.amount) > 0 && item.kategori === selectedCategory.value)
+      selectedCategory.value === "All"
+        ? availableItems.value.filter((item) => parseInt(item.amount) > 0)
+        : availableItems.value.filter(
+            (item) =>
+              parseInt(item.amount) > 0 &&
+              item.kategori === selectedCategory.value
+          )
     );
 
     const validateAmount = computed(() => {
@@ -120,11 +126,15 @@ export default {
           return;
         }
 
-        const response = await axios.post(`${API_BASE_URL}/borrow`, formData.value, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.post(
+          `${API_BASE_URL}/borrow`,
+          formData.value,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         if (response.data.status === "success") {
           success.value = "Peminjaman berhasil dilakukan!";
@@ -191,13 +201,23 @@ export default {
 
 <template>
   <div class="max-w-2xl mx-auto p-6 mt-20">
-    <button @click="goHome" class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-xl mb-6">Kembali</button>
+    <button
+      @click="goHome"
+      class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-xl mb-6"
+    >
+      Kembali
+    </button>
     <div class="mb-6">
       <h1 class="text-2xl font-bold text-gray-800 mb-2">Isi Form Peminjaman</h1>
-      <p class="italic text-gray-400 text-sm mx-auto">"Yang Sudah Boleh Pulang..."</p>
+      <p class="italic text-gray-400 text-sm mx-auto">
+        "Yang Sudah Boleh Pulang..."
+      </p>
       <p class="italic text-gray-400 text-sm mx-auto">-Pak Sujud</p>
     </div>
-    <form @submit.prevent="submitForm" class="bg-white shadow-md rounded-lg p-8">
+    <form
+      @submit.prevent="submitForm"
+      class="bg-white shadow-md rounded-lg p-8"
+    >
       <div v-if="error" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
         {{ error }}
       </div>
@@ -208,16 +228,41 @@ export default {
 
       <!-- Nama Peminjam -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="borrower_name"> Nama Peminjam </label>
-        <input type="text" id="borrower_name" v-model="formData.borrower_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="borrower_name"
+        >
+          Nama Peminjam
+        </label>
+        <input
+          type="text"
+          id="borrower_name"
+          v-model="formData.borrower_name"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          required
+        />
       </div>
 
       <!-- Nama Teknisi -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="officer_name"> Nama Teknisi </label>
-        <select id="officer_name" v-model="formData.officer_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="officer_name"
+        >
+          Nama Teknisi
+        </label>
+        <select
+          id="officer_name"
+          v-model="formData.officer_name"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          required
+        >
           <option value="">Pilih Teknisi</option>
-          <option v-for="officer in availableOfficers" :key="officer._id" :value="officer.name">
+          <option
+            v-for="officer in availableOfficers"
+            :key="officer._id"
+            :value="officer.name"
+          >
             {{ officer.name }}
           </option>
         </select>
@@ -225,13 +270,26 @@ export default {
 
       <!-- Keperluan -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="purpose"> Keperluan </label>
-        <textarea id="purpose" v-model="formData.purpose" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="purpose">
+          Keperluan
+        </label>
+        <textarea
+          id="purpose"
+          v-model="formData.purpose"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          rows="3"
+          required
+        ></textarea>
       </div>
 
       <!-- Tanggal Peminjaman -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="borrow_date"> Tanggal Peminjaman </label>
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="borrow_date"
+        >
+          Tanggal Peminjaman
+        </label>
         <input
           type="datetime-local"
           id="borrow_date"
@@ -244,7 +302,12 @@ export default {
 
       <!-- Tanggal Pengembalian -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="return_date"> Tanggal Pengembalian </label>
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="return_date"
+        >
+          Tanggal Pengembalian
+        </label>
         <input
           type="datetime-local"
           id="return_date"
@@ -257,12 +320,22 @@ export default {
 
       <!-- Dropdown Kategori -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="category"> Kategori </label>
-        <select id="category" v-model="selectedCategory" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="category"
+        >
+          Kategori
+        </label>
+        <select
+          id="category"
+          v-model="selectedCategory"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
           <option value="All">Semua Kategori</option>
           <option value="Kamera">Kamera</option>
           <option value="Lensa">Lensa</option>
           <option value="Gimbal">Gimbal</option>
+          <option value="Audio">Audio</option>
           <option value="Lighting">Lighting</option>
           <option value="Tripod">Tripod</option>
           <option value="Baterai dan charger">Baterai dan charger</option>
@@ -274,41 +347,87 @@ export default {
 
       <!-- Dropdown Item -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="item"> Nama Alat </label>
-        <select id="item" @change="handleItemSelect($event.target.value)" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="item">
+          Nama Alat
+        </label>
+        <select
+          id="item"
+          @change="handleItemSelect($event.target.value)"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          required
+        >
           <option value="">Pilih Item</option>
-          <option v-for="item in filteredItemsByCategory" :key="item._id" :value="item._id">{{ item.name }} (Tersedia: {{ item.amount }})</option>
+          <option
+            v-for="item in filteredItemsByCategory"
+            :key="item._id"
+            :value="item._id"
+          >
+            {{ item.name }} (Tersedia: {{ item.amount }})
+          </option>
         </select>
       </div>
 
       <div class="mb-4">
-        <button @click="addItemToBorrowedList" type="button" class="bg-green-500 rounded-xl hover:bg-green-700 text-white font-bold py-2 px-4">Tambah ke Daftar</button>
+        <button
+          @click="addItemToBorrowedList"
+          type="button"
+          class="bg-green-500 rounded-xl hover:bg-green-700 text-white font-bold py-2 px-4"
+        >
+          Tambah ke Daftar
+        </button>
       </div>
 
       <div class="mb-4 border-t border-gray-400">
         <h3 class="text-lg font-bold my-3">Daftar Barang yang Dipinjam</h3>
         <ul>
-          <li v-for="(item, index) in formData.borrowedItems" :key="index" class="flex justify-between items-center mb-2">
+          <li
+            v-for="(item, index) in formData.borrowedItems"
+            :key="index"
+            class="flex justify-between items-center mb-2"
+          >
             <span>{{ item.item_name }} (Jumlah: {{ item.amount }})</span>
-            <button @click="formData.borrowedItems.splice(index, 1)" type="button" class="text-red-500 hover:underline">Hapus</button>
+            <button
+              @click="formData.borrowedItems.splice(index, 1)"
+              type="button"
+              class="text-red-500 hover:underline"
+            >
+              Hapus
+            </button>
           </li>
         </ul>
       </div>
 
       <div class="flex items-center justify-end">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-xl">Submit</button>
+        <button
+          type="submit"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-xl"
+        >
+          Submit
+        </button>
       </div>
     </form>
 
     <!-- Pop-up -->
-    <div v-if="showPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 rounded-lg">
+    <div
+      v-if="showPopup"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 rounded-lg"
+    >
       <div class="bg-white p-6 rounded shadow-lg text-center gap-5">
         <h3 class="text-xl font-bold mb-4">Yay!Peminjaman Berhasil</h3>
-        <p class="mb-2 text-gray-500 w-3/4 text-thin mx-auto">Terima kasih sudah mengisi, jangan lupa konfirmasi ke teknisi.</p>
-        <button class="mb-4 text-white bg-blue-500 hover:bg-blue-700 rounded py-2 px-4 mr-4">
+        <p class="mb-2 text-gray-500 w-3/4 text-thin mx-auto">
+          Terima kasih sudah mengisi, jangan lupa konfirmasi ke teknisi.
+        </p>
+        <button
+          class="mb-4 text-white bg-blue-500 hover:bg-blue-700 rounded py-2 px-4 mr-4"
+        >
           <router-link to="/teknisi"> Lihat kontak teknisi </router-link>
         </button>
-        <button @click="showPopup = false" class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 rounded-lg px-4">Tutup</button>
+        <button
+          @click="showPopup = false"
+          class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 rounded-lg px-4"
+        >
+          Tutup
+        </button>
       </div>
     </div>
   </div>

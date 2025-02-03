@@ -128,27 +128,31 @@ export default {
 
       this.$nextTick(() => {
         const element = document.getElementById("invoice-template");
-        element.classList.remove("hidden");
+        if (element) {
+          element.classList.remove("hidden"); // Menampilkan template invoice
 
-        setTimeout(() => {
-          const options = {
-            margin: 1,
-            filename: `Invoice_${transaction.borrower_name}.pdf`,
-            html2canvas: { scale: 2 },
-            jsPDF: { orientation: "portrait" },
-          };
+          setTimeout(() => {
+            const options = {
+              margin: 1,
+              filename: `Invoice_${transaction.borrower_name}.pdf`,
+              html2canvas: { scale: 2 },
+              jsPDF: { orientation: "portrait" },
+            };
 
-          html2pdf()
-            .from(element)
-            .set(options)
-            .save()
-            .finally(() => {
-              element.classList.add("hidden");
-            });
-        }, 500);
+            // Generate PDF
+            html2pdf()
+              .from(element)
+              .set(options)
+              .save()
+              .finally(() => {
+                element.classList.add("hidden"); // Menyembunyikan kembali setelah download
+              });
+          }, 500);
+        } else {
+          console.error("Invoice template element not found.");
+        }
       });
     },
-
     async returnItem(borrowId) {
       try {
         const response = await axios.post(
@@ -325,6 +329,61 @@ export default {
       >
         Next
       </button>
+    </div>
+  </div>
+  <!-- Hidden Invoice Template -->
+  <div id="invoice-template" v-if="selectedTransaction" class="hidden">
+    <div style="display: flex; align-items: center; margin: 1rem">
+      <img src="../assets/logo.png" alt="logo" class="w-52" />
+    </div>
+    <div class="text-center text-3xl font-bold">Invoice</div>
+    <div class="text-center text-3xl font-bold mb-3">Peminjaman Barang</div>
+    <div class="text-left text-md m-10">
+      <table class="text-left">
+        <tbody>
+          <tr>
+            <td class="py-2">Peminjam:</td>
+            <td class="px-6 py-2">{{ selectedTransaction.borrower_name }}</td>
+          </tr>
+          <tr>
+            <td class="py-2">Teknisi:</td>
+            <td class="px-6 py-2">{{ selectedTransaction.officer_name }}</td>
+          </tr>
+          <tr>
+            <td class="py-2">Tanggal Peminjaman:</td>
+            <td class="px-6 py-2">{{ selectedTransaction.borrow_date }}</td>
+          </tr>
+          <tr>
+            <td class="py-2">Tanggal Pengembalian:</td>
+            <td class="px-6 py-2">{{ selectedTransaction.return_date }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table
+        class="table-auto w-full text-left border-collapse mt-8"
+        style="border: 1px solid black"
+      >
+        <thead style="border: 1px solid black">
+          <tr>
+            <th class="border px-4 py-2">Nama Barang</th>
+          </tr>
+        </thead>
+        <tbody style="border: 1px solid black">
+          <tr v-for="item in selectedTransaction.items" :key="item.item_id">
+            <td class="border px-4 py-2">{{ item.item_name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-end text-md mt-20 mr-6 mb-4">
+      <p>Kepala Divisi Teknisi</p>
+      <p>Surabaya, Indonesia</p>
+      <div class="flex justify-end mt-4">
+        <img src="../assets/signature.png" alt="signature" class="w-32" />
+      </div>
+      <p>(Aiman Ahmad O.)</p>
+      <p>Invoice dibuat pada {{ new Date().toLocaleDateString() }}</p>
     </div>
   </div>
 </template>
