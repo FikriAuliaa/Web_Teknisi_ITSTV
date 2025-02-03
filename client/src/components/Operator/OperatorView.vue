@@ -42,9 +42,7 @@ export default {
           },
         });
         alert("Operator deleted successfully!");
-        operators.value = operators.value.filter(
-          (operator) => operator._id !== id
-        );
+        operators.value = operators.value.filter((operator) => operator._id !== id);
         fetchData();
       } catch (err) {
         error.value = "Error deleting operator. Please try again later.";
@@ -74,27 +72,11 @@ export default {
   <div class="mt-6">
     <div v-if="loading" class="flex justify-center items-center">
       <div class="text-center">
-        <svg
-          class="animate-spin h-10 w-10 text-blue-600 mx-auto"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 0112-7.32V4a10 10 0 00-10 10h2z"
-          ></path>
+        <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0112-7.32V4a10 10 0 00-10 10h2z"></path>
         </svg>
-        <p class="mt-2 text-gray-500">Loading operators...</p>
+        <p class="mt-2 text-gray-500 italic">Satu Tekad, Satu Tujuan ITS TV Eureka!</p>
       </div>
     </div>
 
@@ -102,15 +84,8 @@ export default {
       {{ error }}
     </div>
 
-    <div
-      v-if="!loading && operators.length"
-      class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-    >
-      <div
-        v-for="operator in operators"
-        :key="operator._id"
-        class="bg-white border border-gray-200 rounded-lg shado flex flex-col h-full"
-      >
+    <div v-if="!loading && operators.length" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div v-for="operator in operators" :key="operator._id" class="bg-white border border-gray-200 rounded-lg shado flex flex-col h-full">
         <div class="flex flex-col items-center pb-10 mt-6">
           <h5 class="mb-1 text-xl font-medium text-gray-900">
             {{ operator.name }}
@@ -140,9 +115,7 @@ export default {
       </div>
     </div>
 
-    <p v-if="!loading && !operators.length" class="text-gray-500 text-center">
-      No operators available.
-    </p>
+    <p v-if="!loading && !operators.length" class="text-gray-500 text-center">No operators available.</p>
   </div>
 </template>
 

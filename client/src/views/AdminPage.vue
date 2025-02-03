@@ -33,12 +33,7 @@ export default {
       <FullView />
     </div>
 
-    <button
-      class="tombol hover:bg-green-700 transition-all"
-      @click="toggleForm"
-    >
-      +
-    </button>
+    <button class="tombol hover:bg-green-700 transition-all" @click="toggleForm">+</button>
 
     <AddForm v-if="formActive" :onClose="closeForm" />
   </div>

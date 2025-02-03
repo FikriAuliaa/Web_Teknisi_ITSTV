@@ -1,8 +1,10 @@
 <template>
-  <div class="min-h-screen flex flex-col justify-center items-center">
+  <div class="flex flex-col justify-center items-center mt-28 mb-8">
     <!-- Form box -->
-    <div class="form-box w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
-      <header>Login</header>
+    <div
+      class="form-box w-full max-w-sm p-6 rounded-lg shadow-lg mb-6 max-md:w-5/6"
+    >
+      <header>Login Yuk</header>
       <div class="input-box">
         <input
           v-model="username"
@@ -45,6 +47,13 @@
         Sign In
       </button>
     </div>
+    <p class="italic text-gray-400 text-sm mx-auto text-center">
+      "Kebaikan terbaik adalah ketika kamu melupakan setiap kebaikan yang pernah
+      kamu lakukan"
+    </p>
+    <p class="italic text-gray-400 text-sm mx-auto text-center">
+      -Iki Adfi Nur Mohamad
+    </p>
   </div>
 </template>
 
@@ -113,7 +122,8 @@ export default {
           alert("Login successful!");
 
           this.$router.push({
-            path: data.user.role === "admin" ? "/admin" : "/HomePageOperator",
+            path:
+              data.user.role === "admin" ? "/admin/home" : "/HomePageOperator",
           });
         } else {
           alert(data.message || "Login failed.");

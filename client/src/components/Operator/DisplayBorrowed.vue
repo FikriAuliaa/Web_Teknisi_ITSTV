@@ -232,12 +232,6 @@ export default {
                   v-for="borrowedItem in item.items"
                   :key="borrowedItem.item_id"
                 >
-                  {{ borrowedItem.item_name }}
-                </div>
-                <div
-                  v-for="borrowedItem in item.items"
-                  :key="borrowedItem.item_id"
-                >
                   {{ borrowedItem.item_name }} (Jumlah:
                   {{ borrowedItem.amount }})
                 </div>

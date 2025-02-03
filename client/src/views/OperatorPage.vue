@@ -25,7 +25,16 @@ export default {
 </script>
 
 <template>
-  <div class="mt-10 mb-4">
+  <div class="mt-20 mb-4 max-w-7xl mx-auto">
+    <!-- Kembali Button -->
+    <div class="mb-6">
+      <router-link
+        to="/admin/home"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Kembali
+      </router-link>
+    </div>
     <h1 class="font-bold text-3xl mb-2 text-center text-black">
       Daftar Teknisi
     </h1>
