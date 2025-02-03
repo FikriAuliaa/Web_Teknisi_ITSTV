@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col justify-center items-center mt-28">
+  <div class="flex flex-col justify-center items-center mt-28 mb-8">
     <!-- Form box -->
-    <div class="form-box w-full max-w-sm p-6 rounded-lg shadow-lg mb-6">
+    <div class="form-box w-full max-w-sm p-6 rounded-lg shadow-lg mb-6 max-md:w-5/6">
       <header>Login Yuk</header>
       <div class="input-box">
         <input v-model="username" type="text" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Username" />

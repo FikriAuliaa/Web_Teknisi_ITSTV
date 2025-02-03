@@ -11,7 +11,7 @@
         5. Ambil alat dan pastikan untuk mengembalikan sesuai waktu yang ditentukan.
       </p>
       <!-- <div class="mt-6">
-        <router-link v-if="isGuest" to="/" class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition transform hover:scale-105"> Back to Home </router-link>
+        <router-link v-if="isGuest" to="/" class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition transform hover:scale-105"> Kembali </router-link>
       </div> -->
     </div>
   </div>

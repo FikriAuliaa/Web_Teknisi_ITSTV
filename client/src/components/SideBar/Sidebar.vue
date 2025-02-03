@@ -18,7 +18,7 @@ export default {
 <template>
   <div class="fixed h-max w-max cursor-pointer">
     <div class="h-screen w-screen duration-500">
-      <div class="absolute z-40 h-screen w-screen border border-gray-500 bg-blue-900 p-6 text-gray-200 backdrop-blur-lg duration-500 md:w-1/2 lg:w-44">
+      <div class="absolute z-40 h-screen w-screen border border-gray-500 bg-blue-900 p-6 text-gray-200 duration-500 md:w-1/2 lg:w-44">
         <div class="min-w-xl z-40 overflow-y-auto overflow-x-hidden text-left text-lg mt-20">
           <SidebarLink to="/admin" icon="pi pi-home">Alat</SidebarLink>
           <SidebarLink to="/admin/all-operator" icon="pi pi-users">Teknisi</SidebarLink>
@@ -44,7 +44,7 @@ export default {
     <div :class="['h-screen duration-500', isOpen ? 'h-screen w-screen' : 'w-0']">
       <div
         :class="[
-          'absolute top-0 z-40 h-screen w-screen border border-gray-500 bg-opacity-60 bg-gradient-to-l from-blue-900 to-blue-600-to-r  p-10 text-gray-200 backdrop-blur-lg duration-500 md:w-1/2 lg:w-1/3',
+          'absolute top-0 z-40 h-screen w-screen border border-gray-500 bg-opacity-60 bg-gradient-to-l from-blue-900 to-blue-600-to-r  p-10 text-gray-200 duration-500 md:w-1/2 lg:w-1/3',
           isOpen ? 'translate-x-0' : '-translate-x-full md:-translate-x-48',
         ]"
       >

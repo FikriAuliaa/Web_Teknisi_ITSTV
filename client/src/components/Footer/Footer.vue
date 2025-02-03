@@ -1,33 +1,9 @@
 <template>
-  <footer class="bg-gradient-to-l from-blue-900 to-blue-600 text-white py-6 z-50">
-    <div class="item-center grid items-center justify-items-center md:gap-10 lg:grid-cols-2">
-      <div class="mb-6 md:mb-0 md:ml-0 md:w-2/3">
+  <footer class="bg-gradient-to-l from-blue-900 to-blue-600 text-white py-6 px-4 z-50">
+    <div class="item-center grid items-center md:justify-items-center md:gap-10 lg:grid-cols-2">
+      <div class="mb-6 md:mb-0 ml-0 md:w-2/3">
         <div class="w-1/2 md:w-2/3">
           <img class="h-12 w-36" src="../../assets/footeritstv.png" />
-
-          <ul class="mt-2 flex flex-row justify-around">
-            <li>
-              <Link href="https://www.facebook.com/barunastraits" target="_blank">
-                <AiFillFacebook />
-              </Link>
-            </li>
-            <li>
-              <Link href="https://twitter.com/BarunastraITS" target="_blank">
-                <AiFillTwitterCircle />
-              </Link>
-            </li>
-            <li>
-              <Link href="https://www.linkedin.com/company/team-barunastra-its/" target="_blank">
-                <AiFillLinkedin />
-              </Link>
-            </li>
-
-            <li>
-              <Link href="https://www.instagram.com/barunastra.its" target="_blank">
-                <AiFillInstagram />
-              </Link>
-            </li>
-          </ul>
         </div>
         <div class="flex flex-col gap-1 py-3 text-left font-thin text-sm">
           <p>

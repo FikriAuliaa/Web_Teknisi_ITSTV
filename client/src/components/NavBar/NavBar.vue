@@ -3,15 +3,15 @@
     <div class="container mx-auto flex justify-between items-center">
       <!-- Logo and Title -->
       <div class="flex items-center space-x-4">
-        <img src="../../assets/itstv-gemilang.png" alt="Lab Logo" class="h-12 w-32" />
-        <h1 class="font-extrabold">Selamat Datang Kru Gemilang!</h1>
+        <img src="../../assets/itstv-gemilang.png" alt="Lab Logo" class="md:h-12 md:w-32 h-6 w-16" />
+        <h1 class="font-extrabold max-md:text-sm">Selamat Datang Kru Gemilang!</h1>
       </div>
 
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center space-x-6">
         <!-- Aturan Peminjaman -->
         <router-link :to="rulesNavigationTarget" v-if="showRulesButton" class="px-3 py-1 bg-gradient-to-l from-blue-900 to-blue-600 rounded-lg hover:bg-blue-800 transition text-white">
-          {{ isOnRulesPage ? (role !== "Guest" ? "Back to Dashboard" : "Back to Home") : "Aturan Peminjaman" }}
+          {{ isOnRulesPage ? (role !== "Guest" ? "Back to Dashboard" : "Kembali") : "Aturan Peminjaman" }}
         </router-link>
 
         <!-- User Profile -->
@@ -29,24 +29,24 @@
 
       <!-- Mobile Menu Button -->
       <button @click="toggleMenu" class="md:hidden p-2">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg class="w-8 h-8 text-blue-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
       </button>
     </div>
 
     <!-- Mobile Dropdown Menu -->
-    <div v-show="menuOpen" class="md:hidden bg-[#213555] text-white py-2">
-      <router-link :to="rulesNavigationTarget" v-if="showRulesButton" class="block px-4 py-2 hover:bg-blue-700">
-        {{ isOnRulesPage ? (role !== "Guest" ? "Back to Dashboard" : "Back to Home") : "Aturan Peminjaman" }}
+    <div v-show="menuOpen" class="md:hidden text-blue-900 py-2">
+      <router-link :to="rulesNavigationTarget" v-if="showRulesButton" class="block px-4 py-2 hover:bg-blue-800 hover:text-white">
+        {{ isOnRulesPage ? (role !== "Guest" ? "Back to Dashboard" : "Kembali") : "Aturan Peminjaman" }}
       </router-link>
 
-      <div v-if="username && role" class="px-4 py-2 border-t border-gray-600">
+      <div v-if="username && role" class="px-4 py-2 border-t border-gray-400">
         <span class="block font-medium capitalize">{{ username }}</span>
         <span class="block text-xs"> as {{ role === "operator" ? "crew" : role }} </span>
       </div>
 
-      <button v-if="username !== 'Guest'" @click="logout" class="block w-full text-left px-4 py-2 bg-red-600 hover:bg-red-700 transition">Logout</button>
+      <button v-if="username !== 'Guest'" @click="logout" class="block w-full text-left px-4 py-2 bg-red-600 hover:bg-red-700 transition text-white">Logout</button>
     </div>
   </nav>
 </template>

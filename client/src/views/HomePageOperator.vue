@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <p class="italic text-gray-400 text-sm mx-auto text-center w-1/3">"Ya Allah, jika hari ini aku merasa kecewa, sadarkan aku bahwa rencana-Mu lebih indah daripada harapanku."</p>
+  <p class="italic text-gray-400 text-sm mx-auto text-center md:w-1/3">"Ya Allah, jika hari ini aku merasa kecewa, sadarkan aku bahwa rencana-Mu lebih indah daripada harapanku."</p>
   <p class="italic text-gray-400 text-sm mx-auto text-center">-</p>
 </template>
 

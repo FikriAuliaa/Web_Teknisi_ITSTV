@@ -191,7 +191,7 @@ export default {
 
 <template>
   <div class="max-w-2xl mx-auto p-6 mt-20">
-    <button @click="goHome" class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-xl mb-6">Back to Home</button>
+    <button @click="goHome" class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-xl mb-6">Kembali</button>
     <div class="mb-6">
       <h1 class="text-2xl font-bold text-gray-800 mb-2">Isi Form Peminjaman</h1>
       <p class="italic text-gray-400 text-sm mx-auto">"Yang Sudah Boleh Pulang..."</p>

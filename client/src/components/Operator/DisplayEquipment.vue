@@ -71,8 +71,8 @@ onMounted(fetchEquipments);
 
 <template>
   <div class="p-4 mt-16 max-w-7xl mx-auto">
-    <!-- Tombol Back -->
-    <button class="mb-4 text-white px-4 py-2 rounded-lg bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500" @click="router.back()">Back</button>
+    <!-- Tombol Kembali -->
+    <button class="mb-4 text-white px-4 py-2 rounded-lg bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500" @click="router.back()">Kembali</button>
     <p class="italic text-gray-400 text-sm mx-auto text-center">"Tidurnya larut malam, bangunnya pagi buta, klo bukan anggota Power Rangers mana bisa."</p>
     <p class="italic text-gray-400 text-sm mx-auto text-center">-Power Rangers Merah</p>
     <!-- Filter Kategori -->

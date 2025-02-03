@@ -129,14 +129,14 @@ export default {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8 relative mt-20">
-    <div class="absolute top-4 left-4 md:relative md:top-0 md:left-0">
-      <button @click="goHome" class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg text-sm md:text-base w-full md:w-auto">Back to Home</button>
+  <div class="container mx-auto px-4 py-8 relative mt-16 md:mt-20">
+    <div class="absolute top-4 left-4 md:relative md:top-0 md:left-0 justif">
+      <button @click="goHome" class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg text-sm md:text-base w-full md:w-auto">Kembali</button>
     </div>
 
     <!-- Page Title (Dengan Jarak dari Tombol) -->
-    <h1 class="text-xl lg:text-3xl font-bold text-gray-800 text-center w-full mx-auto mt-6 mb-3">Daftar Alat Dipinjam</h1>
-    <p class="italic text-gray-400 text-sm mx-auto text-center w-1/2">"yang cewe nunggu ditembak, yang cowo takut ditolak, yang salah orang jual nasi goreng, nasi udah matang malah digoreng"</p>
+    <h1 class="text-xl lg:text-3xl font-bold text-gray-800 text-center w-full mx-auto mt-12 md:mt-6 mb-3">Daftar Alat Dipinjam</h1>
+    <p class="italic text-gray-400 text-sm mx-auto text-center md:w-1/2">"yang cewe nunggu ditembak, yang cowo takut ditolak, yang salah orang jual nasi goreng, nasi udah matang malah digoreng"</p>
     <p class="italic text-gray-400 text-sm mx-auto text-center">-Depot Taria</p>
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center items-center mt-6">
