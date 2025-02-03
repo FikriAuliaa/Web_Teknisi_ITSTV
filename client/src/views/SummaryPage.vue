@@ -179,6 +179,9 @@ export default {
 
 <template>
   <div class="container mx-auto px-4 py-8 mt-20">
+    <h1 class="font-bold text-3xl mb-2 text-center text-black">
+      Daftar Teknisi
+    </h1>
     <!-- Error State -->
     <div v-if="error" class="text-red-500 text-center mb-4">
       {{ error }}
@@ -211,6 +214,15 @@ export default {
           Satu Tekad, Satu Tujuan ITS TV Eureka!
         </p>
       </div>
+    </div>
+    <!-- Kembali Button -->
+    <div class="mb-6">
+      <router-link
+        to="/admin/home"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Kembali
+      </router-link>
     </div>
 
     <!-- Table -->

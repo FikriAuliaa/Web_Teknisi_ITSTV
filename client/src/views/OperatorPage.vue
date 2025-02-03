@@ -26,10 +26,26 @@ export default {
 
 <template>
   <div class="mt-20 mb-4 max-w-7xl mx-auto">
-    <h1 class="font-bold text-3xl mb-2 text-center text-black">Daftar Teknisi</h1>
+    <!-- Kembali Button -->
+    <div class="mb-6">
+      <router-link
+        to="/admin/home"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Kembali
+      </router-link>
+    </div>
+    <h1 class="font-bold text-3xl mb-2 text-center text-black">
+      Daftar Teknisi
+    </h1>
     <OperatorView />
 
-    <button class="tombol hover:bg-green-700 transition-all" @click="toggleForm">+</button>
+    <button
+      class="tombol hover:bg-green-700 transition-all"
+      @click="toggleForm"
+    >
+      +
+    </button>
     <OperatorAdd v-if="formActive" @close="closeForm" />
   </div>
 </template>
