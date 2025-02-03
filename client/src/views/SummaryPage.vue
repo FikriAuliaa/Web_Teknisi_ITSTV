@@ -280,14 +280,14 @@ export default {
             <td class="border px-4 py-2 text-center">
               <button
                 @click="exportToPDF(transaction)"
-                class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-700 mb-2"
+                class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-700 mb-2 mr-2"
               >
                 Download
               </button>
               <button
                 v-if="canBeReturned(transaction)"
                 @click="returnItem(transaction._id)"
-                class="bg-green-500 hover:bg-green-700 text-white py-2 px-5 rounded-lg text-sm"
+                class="bg-green-500 hover:bg-green-700 text-white py-2 px-5 rounded-lg text-sm mb-2"
               >
                 Return
               </button>
