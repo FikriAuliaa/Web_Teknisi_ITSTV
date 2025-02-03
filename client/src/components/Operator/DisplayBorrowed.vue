@@ -17,6 +17,10 @@ export default {
     const error = ref("");
     const loading = ref(true);
 
+    // Pagination
+    const currentPage = ref(1);
+    const itemsPerPage = ref(10);
+
     const fetchBorrowedItems = async () => {
       loading.value = true;
       try {
@@ -31,7 +35,7 @@ export default {
           error.value = "Data not in expected format.";
         }
       } catch (err) {
-        console.error("Error fetching borrowed items:", err); // Debug log
+        console.error("Error fetching borrowed items:", err);
         error.value = "Error fetching data. Please try again later.";
       } finally {
         loading.value = false;
@@ -118,6 +122,23 @@ export default {
       });
     });
 
+    // Pagination logic
+    const totalPages = computed(() => {
+      return Math.ceil(borrowedItems.value.length / itemsPerPage.value);
+    });
+
+    const paginatedItems = computed(() => {
+      const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+      const endIndex = startIndex + itemsPerPage.value;
+      return sortedBorrowedItems.value.slice(startIndex, endIndex);
+    });
+
+    const changePage = (pageNumber) => {
+      if (pageNumber >= 1 && pageNumber <= totalPages.value) {
+        currentPage.value = pageNumber;
+      }
+    };
+
     onMounted(() => {
       fetchBorrowedItems();
     });
@@ -132,6 +153,10 @@ export default {
       sortDirection,
       toggleSort,
       sortedBorrowedItems,
+      paginatedItems,
+      totalPages,
+      currentPage,
+      changePage,
       goHome,
     };
   },
@@ -140,7 +165,7 @@ export default {
 
 <template>
   <div class="container mx-auto px-4 py-8 relative mt-16 md:mt-20">
-    <div class="absolute top-4 left-4 md:relative md:top-0 md:left-0 justif">
+    <div class="absolute top-4 left-4 md:relative md:top-0 md:left-0">
       <button
         @click="goHome"
         class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg text-sm md:text-base w-full md:w-auto"
@@ -226,7 +251,7 @@ export default {
         </thead>
         <tbody class="divide-y divide-gray-200">
           <tr
-            v-for="item in sortedBorrowedItems"
+            v-for="item in paginatedItems"
             :key="item._id"
             class="hover:bg-gray-50"
           >
@@ -292,6 +317,25 @@ export default {
 
     <div v-else class="mt-6 text-center text-gray-500">
       No borrowed items found.
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="flex justify-center items-center mt-4">
+      <button
+        @click="changePage(currentPage - 1)"
+        :disabled="currentPage <= 1"
+        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded disabled:opacity-50"
+      >
+        Previous
+      </button>
+      <span class="mx-4">{{ currentPage }} / {{ totalPages }}</span>
+      <button
+        @click="changePage(currentPage + 1)"
+        :disabled="currentPage >= totalPages"
+        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded disabled:opacity-50"
+      >
+        Next
+      </button>
     </div>
   </div>
 </template>
