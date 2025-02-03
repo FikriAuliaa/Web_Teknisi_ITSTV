@@ -190,14 +190,14 @@ export default {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto p-6">
-    <div class="mb-4">
-      <button @click="goHome" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Home</button>
+  <div class="max-w-2xl mx-auto p-6 mt-20">
+    <button @click="goHome" class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-xl mb-6">Back to Home</button>
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-800 mb-2">Isi Form Peminjaman</h1>
+      <p class="italic text-gray-400 text-sm mx-auto">"Yang Sudah Boleh Pulang..."</p>
+      <p class="italic text-gray-400 text-sm mx-auto">-Pak Sujud</p>
     </div>
-
     <form @submit.prevent="submitForm" class="bg-white shadow-md rounded-lg p-8">
-      <h2 class="text-2xl font-bold mb-6 text-gray-800">Peminjaman Alat</h2>
-
       <div v-if="error" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
         {{ error }}
       </div>
@@ -282,11 +282,11 @@ export default {
       </div>
 
       <div class="mb-4">
-        <button @click="addItemToBorrowedList" type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Tambah ke Daftar</button>
+        <button @click="addItemToBorrowedList" type="button" class="bg-green-500 rounded-xl hover:bg-green-700 text-white font-bold py-2 px-4">Tambah ke Daftar</button>
       </div>
 
-      <div class="mb-4">
-        <h3 class="text-lg font-bold mb-2">Daftar Barang yang Dipinjam</h3>
+      <div class="mb-4 border-t border-gray-400">
+        <h3 class="text-lg font-bold my-3">Daftar Barang yang Dipinjam</h3>
         <ul>
           <li v-for="(item, index) in formData.borrowedItems" :key="index" class="flex justify-between items-center mb-2">
             <span>{{ item.item_name }} (Jumlah: {{ item.amount }})</span>
@@ -296,19 +296,19 @@ export default {
       </div>
 
       <div class="flex items-center justify-end">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-xl">Submit</button>
       </div>
     </form>
 
     <!-- Pop-up -->
-    <div v-if="showPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white p-6 rounded shadow-lg text-center">
-        <h3 class="text-xl font-bold mb-4">Peminjaman Berhasil</h3>
-        <p class="mb-2">Terima kasih sudah mengisi, jangan lupa konfirmasi ke teknisi.</p>
-        <p class="mb-4">
-          <router-link to="/teknisi" class="text-blue-500 underline hover:text-blue-700"> Lihat kontak teknisi di sini! </router-link>
-        </p>
-        <button @click="showPopup = false" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Tutup</button>
+    <div v-if="showPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 rounded-lg">
+      <div class="bg-white p-6 rounded shadow-lg text-center gap-5">
+        <h3 class="text-xl font-bold mb-4">Yay!Peminjaman Berhasil</h3>
+        <p class="mb-2 text-gray-500 w-3/4 text-thin mx-auto">Terima kasih sudah mengisi, jangan lupa konfirmasi ke teknisi.</p>
+        <button class="mb-4 text-white bg-blue-500 hover:bg-blue-700 rounded py-2 px-4 mr-4">
+          <router-link to="/teknisi"> Lihat kontak teknisi </router-link>
+        </button>
+        <button @click="showPopup = false" class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 rounded-lg px-4">Tutup</button>
       </div>
     </div>
   </div>

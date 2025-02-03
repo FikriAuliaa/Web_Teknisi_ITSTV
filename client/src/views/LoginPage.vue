@@ -1,50 +1,28 @@
 <template>
-  <div class="min-h-screen flex flex-col justify-center items-center">
+  <div class="flex flex-col justify-center items-center mt-28">
     <!-- Form box -->
-    <div class="form-box w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
-      <header>Login</header>
+    <div class="form-box w-full max-w-sm p-6 rounded-lg shadow-lg mb-6">
+      <header>Login Yuk</header>
       <div class="input-box">
-        <input
-          v-model="username"
-          type="text"
-          class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Username"
-        />
-        <i
-          class="bx bx-user absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
-        ></i>
+        <input v-model="username" type="text" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Username" />
+        <i class="bx bx-user absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"></i>
       </div>
       <div class="input-box">
-        <input
-          v-model="password"
-          type="password"
-          class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Password"
-        />
-        <i
-          class="bx bx-lock-alt absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
-        ></i>
+        <input v-model="password" type="password" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Password" />
+        <i class="bx bx-lock-alt absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"></i>
       </div>
       <div class="input-box">
-        <select
-          v-model="role"
-          class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
+        <select v-model="role" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
           <option value="" disabled selected>Select Role</option>
           <option value="admin">Admin</option>
           <option value="operator">Crew</option>
         </select>
-        <i
-          class="bx bx-user-circle absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
-        ></i>
+        <i class="bx bx-user-circle absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"></i>
       </div>
-      <button
-        @click="login"
-        class="submit w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
-      >
-        Sign In
-      </button>
+      <button @click="login" class="submit w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">Sign In</button>
     </div>
+    <p class="italic text-gray-400 text-sm mx-auto text-center">"Kebaikan terbaik adalah ketika kamu melupakan setiap kebaikan yang pernah kamu lakukan"</p>
+    <p class="italic text-gray-400 text-sm mx-auto text-center">-Iki Adfi Nur Mohamad</p>
   </div>
 </template>
 
@@ -76,10 +54,7 @@ export default {
           role: this.role,
         });
 
-        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(
-          /\/$/,
-          ""
-        );
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
           method: "POST",
@@ -100,9 +75,7 @@ export default {
 
         if (response.ok) {
           if (data.user.role !== this.role) {
-            alert(
-              `Username "${this.username}" and role "${this.role}" do not match.`
-            );
+            alert(`Username "${this.username}" and role "${this.role}" do not match.`);
             return;
           }
 

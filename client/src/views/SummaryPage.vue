@@ -1,17 +1,25 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto px-4 py-8 mt-20">
     <!-- Error State -->
     <div v-if="error" class="text-red-500 text-center mb-4">
       {{ error }}
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="text-center text-lg">Loading data, please wait...</div>
+    <div v-if="loading" class="flex justify-center items-center">
+      <div class="text-center">
+        <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0112-7.32V4a10 10 0 00-10 10h2z"></path>
+        </svg>
+        <p class="mt-2 text-gray-500 italic">Satu Tekad, Satu Tujuan ITS TV Eureka!</p>
+      </div>
+    </div>
 
     <!-- Table -->
-    <div v-if="!loading && Borrow.length" class="overflow-x-auto">
-      <table class="min-w-full bg-white border-collapse border border-gray-300">
-        <thead class="bg-gray-100">
+    <div v-if="!loading && Borrow.length" class="overflow-x-auto border-collapse border border-gray-300 rounded-xl">
+      <table class="min-w-full bg-white">
+        <thead class="bg-blue-800 text-white">
           <tr>
             <th class="px-6 py-3 text-center border border-gray-300">No</th>
             <th class="px-6 py-3 text-center border border-gray-300">Nama Alat</th>
@@ -42,10 +50,10 @@
             <td class="border px-4 py-2 text-center">
               {{ transaction.officer_name }}
             </td>
-            <td class="border px-4 py-2 text-center flex-col lg:flex-row">
-              <button @click="exportToPDF(transaction)" class="bg-blue-500 text-white px-4 py-2 mr-3 rounded hover:bg-blue-700">Download PDF</button>
-              <button v-if="canBeReturned(transaction)" @click="returnItem(transaction._id)" class="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded text-sm md:text-base">Return</button>
-              <span v-else class="text-gray-500 italic">Returned</span>
+            <td class="border px-4 py-2 text-center text-sm justify-items-center">
+              <button @click="exportToPDF(transaction)" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-700 mb-2">Download</button>
+              <button v-if="canBeReturned(transaction)" @click="returnItem(transaction._id)" class="bg-green-500 hover:bg-green-700 text-white py-2 px-5 rounded-lg text-sm">Return</button>
+              <span v-else class="text-gray-500 italic text-sm p-2">Returned</span>
             </td>
           </tr>
         </tbody>

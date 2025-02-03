@@ -26,19 +26,12 @@ export default {
 
 <template>
   <div>
-    <div class="mb-4 mt-10">
-      <h1 class="font-bold text-3xl mb-2 text-center text-black">
-        Daftar alat tersedia
-      </h1>
+    <div class="mb-4 mt-20">
+      <h1 class="font-bold text-3xl mb-2 text-center text-black">Daftar Alat Tersedia</h1>
       <FullView />
     </div>
 
-    <button
-      class="tombol hover:bg-green-700 transition-all"
-      @click="toggleForm"
-    >
-      +
-    </button>
+    <button class="tombol hover:bg-green-700 transition-all" @click="toggleForm">+</button>
 
     <AddForm v-if="formActive" :onClose="closeForm" />
   </div>

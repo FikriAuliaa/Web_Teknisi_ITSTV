@@ -25,18 +25,11 @@ export default {
 </script>
 
 <template>
-  <div class="mt-10 mb-4">
-    <h1 class="font-bold text-3xl mb-2 text-center text-black">
-      Daftar Teknisi
-    </h1>
+  <div class="mt-20 mb-4 max-w-7xl mx-auto">
+    <h1 class="font-bold text-3xl mb-2 text-center text-black">Daftar Teknisi</h1>
     <OperatorView />
 
-    <button
-      class="tombol hover:bg-green-700 transition-all"
-      @click="toggleForm"
-    >
-      +
-    </button>
+    <button class="tombol hover:bg-green-700 transition-all" @click="toggleForm">+</button>
     <OperatorAdd v-if="formActive" @close="closeForm" />
   </div>
 </template>

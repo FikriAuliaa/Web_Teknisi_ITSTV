@@ -111,10 +111,19 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div v-if="loading" class="flex justify-center items-center">
+    <div class="text-center">
+      <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0112-7.32V4a10 10 0 00-10 10h2z"></path>
+      </svg>
+      <p class="mt-2 text-gray-500 italic">Satu Tekad, Satu Tujuan ITS TV Eureka!</p>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto">
     <!-- Dropdown Filter Kategori -->
     <div class="mb-5">
-      <label for="filter-category" class="block mb-2 text-sm font-medium text-gray-900">Filter by Category</label>
+      <label for="filter-category" class="block mb-2 text-sm font-medium text-gray-500">Filter by Category</label>
       <select id="filter-category" v-model="selectedCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         <option value="All">All</option>
         <option value="Kamera">Kamera</option>
@@ -131,10 +140,10 @@ export default {
     </div>
 
     <!-- Item List -->
-    <div class="md:columns-4 columns-1 gap-4 mt-6">
-      <div v-for="item in filteredItems" :key="item._id" class="relative rounded-lg shadow mb-5 bg-grey-500 hover:border-current transition-all hover:bg-gray-300 break-inside-avoid">
+    <div class="md:columns-4 columns-1 gap-4 mt-6 text-sm">
+      <div v-for="item in filteredItems" :key="item._id" class="relative rounded-lg shadow mb-5 bg-grey-500 hover:border-current transition-all hover:bg-gray-200 break-inside-avoid">
         <div class="absolute top-3 right-3 z-10">
-          <button @click="toggleDropdown(item._id)" class="bg-gray-700 text-white rounded-full p-2 hover:bg-gray-600 focus:outline-none">
+          <button @click="toggleDropdown(item._id)" class="text-blue-900 rounded-full p-2 focus:outline-none">
             <i class="pi pi-ellipsis-h"></i>
           </button>
           <div v-if="dropdownStates[item._id]" class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -147,10 +156,10 @@ export default {
           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
             {{ item.name }}
           </h5>
-          <p class="text-xl text-gray-700">Amount: {{ item.amount }}</p>
-          <p class="text-xl text-gray-700">Condition: {{ item.condition }}</p>
-          <p class="text-xl text-gray-700">Category: {{ item.kategori }}</p>
-          <p class="text-xl text-gray-700">Registered At: {{ item.created_at }}</p>
+          <p class="text-gray-700">Amount: {{ item.amount }}</p>
+          <p class="text-gray-700">Condition: {{ item.condition }}</p>
+          <p class="text-gray-700">Category: {{ item.kategori }}</p>
+          <p class="text-gray-700">Registered At: {{ item.created_at }}</p>
         </div>
       </div>
     </div>
