@@ -8,25 +8,56 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center items-center">
       <div class="text-center">
-        <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0112-7.32V4a10 10 0 00-10 10h2z"></path>
+        <svg
+          class="animate-spin h-10 w-10 text-blue-600 mx-auto"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 0112-7.32V4a10 10 0 00-10 10h2z"
+          ></path>
         </svg>
-        <p class="mt-2 text-gray-500 italic">Satu Tekad, Satu Tujuan ITS TV Eureka!</p>
+        <p class="mt-2 text-gray-500 italic">
+          Satu Tekad, Satu Tujuan ITS TV Eureka!
+        </p>
       </div>
     </div>
 
     <!-- Table -->
-    <div v-if="!loading && Borrow.length" class="overflow-x-auto border-collapse border border-gray-300 rounded-xl">
+    <div
+      v-if="!loading && Borrow.length"
+      class="overflow-x-auto border-collapse border border-gray-300 rounded-xl"
+    >
       <table class="min-w-full bg-white">
         <thead class="bg-blue-800 text-white">
           <tr>
             <th class="px-6 py-3 text-center border border-gray-300">No</th>
-            <th class="px-6 py-3 text-center border border-gray-300">Nama Alat</th>
-            <th class="px-6 py-3 text-center border border-gray-300">Tanggal Peminjaman</th>
-            <th class="px-6 py-3 text-center border border-gray-300">Tanggal Pengembalian</th>
-            <th class="px-6 py-3 text-center border border-gray-300">Peminjam</th>
-            <th class="px-6 py-3 text-center border border-gray-300">Teknisi</th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Nama Alat
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Tanggal Peminjaman
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Tanggal Pengembalian
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Peminjam
+            </th>
+            <th class="px-6 py-3 text-center border border-gray-300">
+              Teknisi
+            </th>
             <th class="px-6 py-3 text-center border border-gray-300">Aksi</th>
           </tr>
         </thead>
@@ -50,10 +81,25 @@
             <td class="border px-4 py-2 text-center">
               {{ transaction.officer_name }}
             </td>
-            <td class="border px-4 py-2 text-center text-sm justify-items-center">
-              <button @click="exportToPDF(transaction)" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-700 mb-2">Download</button>
-              <button v-if="canBeReturned(transaction)" @click="returnItem(transaction._id)" class="bg-green-500 hover:bg-green-700 text-white py-2 px-5 rounded-lg text-sm">Return</button>
-              <span v-else class="text-gray-500 italic text-sm p-2">Returned</span>
+            <td
+              class="border px-4 py-2 text-center text-sm justify-items-center"
+            >
+              <button
+                @click="exportToPDF(transaction)"
+                class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-700 mb-2"
+              >
+                Download
+              </button>
+              <button
+                v-if="canBeReturned(transaction)"
+                @click="returnItem(transaction._id)"
+                class="bg-green-500 hover:bg-green-700 text-white py-2 px-5 rounded-lg text-sm"
+              >
+                Return
+              </button>
+              <span v-else class="text-gray-500 italic text-sm p-2"
+                >Returned</span
+              >
             </td>
           </tr>
         </tbody>
@@ -61,7 +107,12 @@
     </div>
 
     <!-- Empty State -->
-    <div v-if="!loading && !Borrow.length" class="text-center text-gray-500 dark:text-gray-400">Tidak ada data peminjaman yang tersedia.</div>
+    <div
+      v-if="!loading && !Borrow.length"
+      class="text-center text-gray-500 dark:text-gray-400"
+    >
+      Tidak ada data peminjaman yang tersedia.
+    </div>
 
     <!-- Hidden Invoice Template -->
     <div id="invoice-template" v-if="selectedTransaction" class="hidden">
@@ -92,7 +143,10 @@
           </tbody>
         </table>
 
-        <table class="table-auto w-full text-left border-collapse mt-8" style="border: 1px solid black">
+        <table
+          class="table-auto w-full text-left border-collapse mt-8"
+          style="border: 1px solid black"
+        >
           <thead style="border: 1px solid black">
             <tr>
               <th class="border px-4 py-2">Nama Barang</th>
@@ -156,11 +210,14 @@ export default {
     async fetchData() {
       this.loading = true;
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}borrow`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}borrow`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         this.Borrow = response.data.data.map((transaction) => ({
           ...transaction,
           borrow_date: transaction.borrow_date,
@@ -216,7 +273,8 @@ export default {
         );
         this.fetchData(); // Refresh data setelah konfirmasi berhasil
       } catch (error) {
-        this.error = error.response?.data?.message || "Error confirming return.";
+        this.error =
+          error.response?.data?.message || "Error confirming return.";
       }
     },
 
