@@ -77,7 +77,7 @@ onMounted(fetchEquipments);
     <p class="italic text-gray-400 text-sm mx-auto text-center">-Power Rangers Merah</p>
     <!-- Filter Kategori -->
     <div class="mb-4">
-      <label for="filter-category" class="block text-gray-500 mb-2">Filter by Category</label>
+      <label for="filter-category" class="block text-gray-500 mb-2">Pilih kategori</label>
       <select id="filter-category" v-model="selectedCategory" class="border rounded px-4 py-2 w-full">
         <option value="All">All</option>
         <option value="Kamera">Kamera</option>

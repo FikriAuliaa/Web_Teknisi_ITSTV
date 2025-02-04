@@ -12,6 +12,7 @@ import Rules from "@/views/Rules.vue";
 import HomePageOperator from "@/views/HomePageOperator.vue";
 import OperatorPage from "@/views/OperatorPage.vue";
 import TechnicianPage from "@/views/TechnicianPage.vue"; // Tambahkan import untuk komponen TechnicianPage
+import HomePageAdmin from "@/views/HomePageAdmin.vue"; // Import HomePageAdmin
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -98,6 +99,12 @@ const router = createRouter({
       meta: { requiresAuth: false },
     },
     {
+      path: "/admin/home", // Rute untuk HomePageAdmin
+      name: "HomePageAdmin",
+      component: HomePageAdmin,
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
+    {
       path: "/:pathMatch(.*)*",
       redirect: "/",
     },
@@ -130,7 +137,7 @@ router.beforeEach((to, from, next) => {
 
   if (to.path === "/" && token) {
     if (role === "admin") {
-      next("/admin");
+      next("/admin/home"); // Arahkan admin ke HomePageAdmin
     } else if (role === "operator") {
       next("/HomePageOperator");
     }

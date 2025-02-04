@@ -15,14 +15,14 @@
         <select v-model="role" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
           <option value="" disabled selected>Select Role</option>
           <option value="admin">Admin</option>
-          <option value="operator">Crew</option>
+          <option value="operator">Kru</option>
         </select>
         <i class="bx bx-user-circle absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"></i>
       </div>
       <button @click="login" class="submit w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">Sign In</button>
     </div>
-    <p class="italic text-gray-400 text-sm mx-auto text-center">"Kebaikan terbaik adalah ketika kamu melupakan setiap kebaikan yang pernah kamu lakukan"</p>
-    <p class="italic text-gray-400 text-sm mx-auto text-center">-Iki Adfi Nur Mohamad</p>
+    <p class="italic text-gray-400 text-sm mx-auto text-center">"Jangan banyak dipikir, tapi dikerjakan!"</p>
+    <p class="italic text-gray-400 text-sm mx-auto text-center">-Gemilang</p>
   </div>
 </template>
 
@@ -86,7 +86,7 @@ export default {
           alert("Login successful!");
 
           this.$router.push({
-            path: data.user.role === "admin" ? "/admin" : "/HomePageOperator",
+            path: data.user.role === "admin" ? "/admin/home" : "/HomePageOperator",
           });
         } else {
           alert(data.message || "Login failed.");
