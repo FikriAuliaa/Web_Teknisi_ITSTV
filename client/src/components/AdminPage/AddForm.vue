@@ -85,6 +85,7 @@
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   name: "AddForm",
@@ -120,7 +121,18 @@ export default {
         })
         .then((response) => {
           console.log("Form submitted successfully:", response.data);
-          alert("Form submitted successfully!");
+
+          // Menampilkan alert dengan SweetAlert2
+          Swal.fire({
+            title: "Success!",
+            text: "Anjay dapet alat baru ya!",
+            icon: "success",
+            confirmButtonText: "OK",
+            customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+              confirmButton: 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-400', // Tombol hijau
+            },
+          });
 
           this.form = {
             pic: "",
@@ -136,8 +148,21 @@ export default {
         })
         .catch((error) => {
           console.error("Error submitting form:", error);
+
+          // Menampilkan alert error dengan SweetAlert2
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to submit form. Please try again!",
+            icon: "error",
+            confirmButtonText: "OK",
+            customClass: {
+              popup: 'rounded-xl', // Konsisten dengan desain success
+              confirmButton: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-400', // Tombol merah untuk error
+            },
+          });
         });
     },
   },
 };
 </script>
+

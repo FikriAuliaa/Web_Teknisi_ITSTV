@@ -1,13 +1,14 @@
 <script>
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
 
 export default {
   name: "FullView",
   setup() {
     const Items = ref([]);
-    const selectedCategory = ref("All"); // Tambahkan properti untuk kategori yang dipilih
+    const selectedCategory = ref("All"); // Properti untuk kategori yang dipilih
     const loadingStates = ref({});
     const dropdownStates = ref({});
     let intervalId = null;
@@ -65,16 +66,45 @@ export default {
     };
 
     const deleteItem = async (id) => {
-      try {
-        await axios.delete(`${API_BASE_URL}/admin/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        Items.value = Items.value.filter((item) => item._id !== id);
-        alert("The Item Successfully Deleted");
-      } catch (error) {
-        console.error("Error deleting item:", error);
+      const confirmResult = await Swal.fire({
+        title: "Yakin ta?",
+        text: "Kamu mau ngehapus alatnya? Ini nnti gabisa di CTRL+Z loh!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, hapus!",
+        customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+            },
+      });
+
+      if (confirmResult.isConfirmed) {
+        try {
+          await axios.delete(`${API_BASE_URL}/admin/${id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          Items.value = Items.value.filter((item) => item._id !== id);
+          Swal.fire({
+            title: "Done bang dihapus!",
+            text: "Semoga dapet alat baru dari ukape ya.",
+            icon: "success",
+            customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+              confirmButton: 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-400', // Tombol hijau
+            },
+          });
+        } catch (error) {
+          console.error("Error deleting item:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete the item. Please try again.",
+            icon: "error",
+            confirmButtonColor: "#d33",
+          });
+        }
       }
     };
 
@@ -107,8 +137,8 @@ export default {
       toggleDropdown,
       deleteItem,
       navigateToEditPage,
-      selectedCategory, // Tambahkan ke return untuk digunakan di template
-      filteredItems, // Tambahkan ke return untuk digunakan di template
+      selectedCategory, // Properti kategori
+      filteredItems, // Properti filter
     };
   },
 };
@@ -143,7 +173,6 @@ export default {
     </div>
   </div>
   <div class="max-w-7xl mx-auto">
-    <!-- Kembali Button -->
     <div class="mb-6">
       <router-link
         to="/admin/home"
@@ -152,8 +181,6 @@ export default {
         Kembali
       </router-link>
     </div>
-
-    <!-- Dropdown Filter Kategori -->
     <div class="mb-5">
       <label
         for="filter-category"
@@ -179,7 +206,6 @@ export default {
       </select>
     </div>
 
-    <!-- Item List -->
     <div class="md:columns-4 columns-1 gap-4 mt-6 text-sm">
       <div
         v-for="item in filteredItems"
