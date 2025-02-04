@@ -173,14 +173,7 @@ export default {
     </div>
   </div>
   <div class="max-w-7xl mx-auto">
-    <div class="mb-6">
-      <router-link
-        to="/admin/home"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-      >
-        Kembali
-      </router-link>
-    </div>
+    
     <div class="mb-5">
       <label
         for="filter-category"

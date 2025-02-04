@@ -30,7 +30,7 @@ export default {
     <div class="mb-6">
       <router-link
         to="/admin/home"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-lg "
       >
         Kembali
       </router-link>

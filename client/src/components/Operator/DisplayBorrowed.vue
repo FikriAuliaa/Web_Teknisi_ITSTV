@@ -166,41 +166,48 @@ export default {
     </div>
 
     <!-- Responsive Table Wrapper -->
-    <div v-if="!loading && borrowedItems.length" class="overflow-x-auto mt-6">
+    <div v-if="!loading && borrowedItems.length" class="overflow-x-auto mt-6 border rounded-lg shadow-lg">
       <table
         class="min-w-max w-full bg-white border-collapse border border-gray-300"
       >
-        <thead class="bg-gray-100">
+        <thead class="bg-blue-800 text-white">
           <tr class="text-sm sm:text-base">
             <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
+              class="px-6 py-3 border border-gray-300 text-center"
             >
               Nama Alat
+              <button @click="toggleSort('item_name')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
-            <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
-            >
+            <th class="px-6 py-3 border border-gray-300 text-center">
               Peminjam
+              <button @click="toggleSort('borrower_name')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
-            <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
-            >
+            <th class="px-6 py-3 border border-gray-300 text-center">
               Teknisi
+              <button @click="toggleSort('officer_name')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
               Keperluan
             </th>
-            <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
-            >
+            <th class="px-6 py-3 border border-gray-300 text-center">
               Tanggal Peminjaman
+              <button @click="toggleSort('borrow_date')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
-            <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
-            >
+            <th class="px-6 py-3 border border-gray-300 text-center">
               Tanggal Pengembalian
+              <button @click="toggleSort('return_date')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
@@ -278,3 +285,13 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped>
+th, td {
+  white-space: nowrap;
+}
+table {
+  width: 100%;
+  text-align: center;
+}
+</style>
