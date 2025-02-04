@@ -258,9 +258,9 @@ export default {
   margin-bottom: 1.5rem; /* Margin di bawah judul */
 }
 
-.bg-gray-100 {
+/* .bg-gray-100 {
   background-color: #c5c5c5;
-}
+} */
 .hover\:bg-gray-200:hover {
   background-color: #e2e8f0;
 }
