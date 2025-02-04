@@ -66,10 +66,10 @@ body {
 .content {
   transition: margin-left 0.3s ease;
 }
-
+/* 
 @media (max-width: 769px) {
   .sidebar {
     display: none;
   }
-}
+} */
 </style>
