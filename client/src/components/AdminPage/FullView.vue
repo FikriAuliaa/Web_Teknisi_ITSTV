@@ -235,9 +235,9 @@ export default {
 
     <div class="p-5">
       <!-- Tambahkan margin-bottom untuk judul -->
-      <h5 class="mb-6 text-2xl font-bold tracking-tight text-gray-900">
+      <h6 class="mb-6 mr-3 text-2xl font-bold tracking-tight text-gray-900">
         {{ item.name }}
-      </h5>
+      </h6>
       <p class="text-gray-700">Jumlah: {{ item.amount }}</p>
       <p class="text-gray-700">Kondisi: {{ item.condition }}</p>
       <p class="text-gray-700">Kategori: {{ item.kategori }}</p>
