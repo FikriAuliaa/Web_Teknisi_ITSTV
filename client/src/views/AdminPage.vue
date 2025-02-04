@@ -26,7 +26,7 @@ export default {
 
 <template>
   <div>
-    <div class="mb-4 mt-10">
+    <div class="mb-4 mt-20">
       <h1 class="font-bold text-3xl mb-2 text-center text-black">
         Katalog Alat Tersedia
       </h1>
