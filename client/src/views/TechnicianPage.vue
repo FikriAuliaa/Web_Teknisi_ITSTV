@@ -1,13 +1,10 @@
 <template>
   <div class="min-h-screen bg-gray-100 p-6">
-    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
+    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-16">
       <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
         Jadwal Teknisi
       </h2>
       <img src="/images/jadwalteknisi.png" alt="jadwal" class="mb-6" />
-      <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-        Hubungi Teknisi
-      </h2>
 
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
@@ -18,7 +15,7 @@
           :href="technician.phone"
           target="_blank"
           rel="noopener noreferrer"
-          class="bg-gray-50 p-5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-between text-lg font-semibold text-gray-900 hover:bg-blue-500 hover:text-white cursor-pointer"
+          class="bg-gray-50 p-3 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-between text-lg font-semibold text-gray-900 hover:bg-blue-500 hover:text-white cursor-pointer"
         >
           <span>{{ technician.name }}</span>
           <img
@@ -29,7 +26,7 @@
         </a>
       </div>
 
-      <div class="text-center mt-6">
+      <div class="text-center mt-12 mb-6">
         <router-link
           to="/operator/book-equipment"
           class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all"
