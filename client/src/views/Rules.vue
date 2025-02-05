@@ -1,6 +1,8 @@
 <template>
   <div class="min-h-screen flex items-start justify-center pt-20">
-    <div class="max-w-sm md:max-w-3xl bg-white bg-opacity-80 backdrop-blur-md rounded-lg shadow-lg p-4 md:p-8 transform transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl glow-effect">
+    <div
+      class="max-w-sm md:max-w-3xl bg-white bg-opacity-80 backdrop-blur-md rounded-lg shadow-lg p-4 md:p-8 transform transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl glow-effect"
+    >
       <h1 class="text-3xl text-gray-800 mb-6">Aturan & Alur Peminjaman</h1>
       <p class="text-gray-700">
         <b>Alur Peminjaman:</b><br />
@@ -8,7 +10,8 @@
         2. Pilih alat yang ingin dipinjam.<br />
         3. Tentukan waktu peminjaman.<br />
         4. Tunggu konfirmasi dari admin.<br />
-        5. Ambil alat dan pastikan untuk mengembalikan sesuai waktu yang ditentukan.
+        5. Ambil alat dan pastikan untuk mengembalikan sesuai waktu yang
+        ditentukan.
       </p>
       <!-- <div class="mt-6">
         <router-link v-if="isGuest" to="/" class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition transform hover:scale-105"> Kembali </router-link>
@@ -52,7 +55,7 @@ export default {
 }
 
 .shadow-lg {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Bayangan lembut */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Bayangan jembut */
 }
 
 .hover\:shadow-2xl:hover {
