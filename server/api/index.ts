@@ -11,7 +11,7 @@ const PORT = 4000;
 
 // Allowed Origins
 const allowedOrigins: string[] = [
-  "https://eureka-tv.netlify.app/", // Frontend di Netlify
+  "https://eurekatv.netlify.app/", // Frontend di Netlify
   "http://localhost:5173", // Frontend lokal untuk pengembangan
 ];
 
