@@ -55,7 +55,7 @@ export default {
 }
 
 .shadow-lg {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Bayangan jembut */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Bayangan jembutt */
 }
 
 .hover\:shadow-2xl:hover {
