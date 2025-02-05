@@ -2,7 +2,7 @@
 
 ## Frontend URL
 ```
-https://peminjaman-gemilang.netlify.app/
+https://eureka-tv.netlify.app/
 ```
 ## Backend URL
 ```
