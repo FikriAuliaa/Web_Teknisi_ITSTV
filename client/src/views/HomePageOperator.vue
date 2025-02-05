@@ -13,7 +13,7 @@
               </svg>
             </div>
             <h2 class="text-xl font-semibold text-gray-900 mb-2">Pinjam Alat</h2>
-            <p class="text-gray-600">Membuat permintaan peminjaman alat kantor</p>
+            <p class="text-gray-600">Ajukan Permintaan Alat!</p>
           </div>
         </router-link>
 
@@ -26,7 +26,7 @@
               </svg>
             </div>
             <h2 class="text-xl font-semibold text-gray-900 mb-2">List alat yang dipinjam</h2>
-            <p class="text-gray-600">Melihat alat apa yang sedang dipinjam</p>
+            <p class="text-gray-600">Pantau Alat Disini!</p>
           </div>
         </router-link>
 
@@ -39,14 +39,14 @@
               </svg>
             </div>
             <h2 class="text-xl font-semibold text-gray-900 mb-2">List Alat</h2>
-            <p class="text-gray-600">Melihat semua alat yang tersedia</p>
+            <p class="text-gray-600">Jelajahi Pilihan Alat!</p>
           </div>
         </router-link>
       </div>
     </div>
   </div>
-  <p class="italic text-gray-400 text-sm mx-auto text-center md:w-1/3">"Ya Allah, jika hari ini aku merasa kecewa, sadarkan aku bahwa rencana-Mu lebih indah daripada harapanku."</p>
-  <p class="italic text-gray-400 text-sm mx-auto text-center">-</p>
+  <p class="italic text-gray-400 text-sm mx-auto text-center md:w-1/3">"Ya Tuhan, jika hari ini aku merasa kecewa, sadarkan aku bahwa rencana-Mu lebih indah daripada harapanku."</p>
+  <p class="italic text-gray-400 text-sm mx-auto text-center">-Euvion</p>
 </template>
 
 <script>

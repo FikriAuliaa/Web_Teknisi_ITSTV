@@ -1,13 +1,14 @@
 <script>
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
 
 export default {
   name: "FullView",
   setup() {
     const Items = ref([]);
-    const selectedCategory = ref("All"); // Tambahkan properti untuk kategori yang dipilih
+    const selectedCategory = ref("All"); // Properti untuk kategori yang dipilih
     const loadingStates = ref({});
     const dropdownStates = ref({});
     let intervalId = null;
@@ -65,16 +66,45 @@ export default {
     };
 
     const deleteItem = async (id) => {
-      try {
-        await axios.delete(`${API_BASE_URL}/admin/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        Items.value = Items.value.filter((item) => item._id !== id);
-        alert("The Item Successfully Deleted");
-      } catch (error) {
-        console.error("Error deleting item:", error);
+      const confirmResult = await Swal.fire({
+        title: "Yakin ta?",
+        text: "Kamu mau ngehapus alatnya? Ini nnti gabisa di CTRL+Z loh!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, hapus!",
+        customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+            },
+      });
+
+      if (confirmResult.isConfirmed) {
+        try {
+          await axios.delete(`${API_BASE_URL}/admin/${id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          Items.value = Items.value.filter((item) => item._id !== id);
+          Swal.fire({
+            title: "Done bang dihapus!",
+            text: "Semoga dapet alat baru dari ukape ya.",
+            icon: "success",
+            customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+              confirmButton: 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-400', // Tombol hijau
+            },
+          });
+        } catch (error) {
+          console.error("Error deleting item:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete the item. Please try again.",
+            icon: "error",
+            confirmButtonColor: "#d33",
+          });
+        }
       }
     };
 
@@ -107,8 +137,8 @@ export default {
       toggleDropdown,
       deleteItem,
       navigateToEditPage,
-      selectedCategory, // Tambahkan ke return untuk digunakan di template
-      filteredItems, // Tambahkan ke return untuk digunakan di template
+      selectedCategory, // Properti kategori
+      filteredItems, // Properti filter
     };
   },
 };
@@ -143,22 +173,12 @@ export default {
     </div>
   </div>
   <div class="max-w-7xl mx-auto">
-    <!-- Kembali Button -->
-    <div class="mb-6">
-      <router-link
-        to="/admin/home"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-      >
-        Kembali
-      </router-link>
-    </div>
-
-    <!-- Dropdown Filter Kategori -->
+    
     <div class="mb-5">
       <label
         for="filter-category"
         class="block mb-2 text-sm font-medium text-gray-500"
-        >Filter by Category</label
+        >Pilih Kategori</label
       >
       <select
         id="filter-category"
@@ -179,49 +199,74 @@ export default {
       </select>
     </div>
 
-    <!-- Item List -->
     <div class="md:columns-4 columns-1 gap-4 mt-6 text-sm">
-      <div
-        v-for="item in filteredItems"
-        :key="item._id"
-        class="relative rounded-lg shadow mb-5 bg-grey-500 hover:border-current transition-all hover:bg-gray-200 break-inside-avoid"
+  <div
+    v-for="item in filteredItems"
+    :key="item._id"
+    class="relative rounded-lg shadow mb-5 bg-grey-500 hover:border-current transition-all hover:bg-gray-200 break-inside-avoid"
+  >
+    <div class="absolute top-3 right-3 z-10">
+      <button
+        @click="toggleDropdown(item._id)"
+        class="text-blue-900 rounded-full p-2 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 transition"
+        aria-label="Options"
+        title="Options"
       >
-        <div class="absolute top-3 right-3 z-10">
-          <button
-            @click="toggleDropdown(item._id)"
-            class="text-blue-900 rounded-full p-2 focus:outline-none"
-          >
-            <i class="pi pi-ellipsis-h"></i>
-          </button>
-          <div
-            v-if="dropdownStates[item._id]"
-            class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg"
-          >
-            <button
-              @click="navigateToEditPage(item._id)"
-              class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-700 hover:text-white rounded-lg transition-all delay-150"
-            >
-              Edit
-            </button>
-            <button
-              @click="deleteItem(item._id)"
-              class="transition-all delay-150 block w-full px-4 py-2 text-left bg-transparent hover:bg-red-600 text-rose-600 hover:text-white rounded-lg"
-            >
-              Remove
-            </button>
-          </div>
-        </div>
+        <img src="../../assets/ellipsis.svg"></img>
+      </button>
+      <div
+        v-if="dropdownStates[item._id]"
+        class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-20"
+      >
+        <button
+          @click="navigateToEditPage(item._id)"
+          class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-blue-500 hover:text-white rounded-lg transition"
+        >
+          Edit
+        </button>
+        <button
+          @click="deleteItem(item._id)"
+          class="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
 
-        <div class="p-5">
-          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
-            {{ item.name }}
-          </h5>
-          <p class="text-gray-700">Amount: {{ item.amount }}</p>
-          <p class="text-gray-700">Condition: {{ item.condition }}</p>
-          <p class="text-gray-700">Category: {{ item.kategori }}</p>
-          <p class="text-gray-700">Registered At: {{ item.created_at }}</p>
+    <div class="p-5">
+      <!-- Tambahkan margin-bottom untuk judul -->
+      <h6 class="mb-6 mr-3 text-2xl font-bold tracking-tight text-gray-900">
+        {{ item.name }}
+      </h6>
+      <p class="text-gray-700">Jumlah: {{ item.amount }}</p>
+      <p class="text-gray-700">Kondisi: {{ item.condition }}</p>
+      <p class="text-gray-700">Kategori: {{ item.kategori }}</p>
+      <p class="text-gray-700">Alat masuk: {{ item.created_at }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style>
+
+.relative .absolute {
+  margin-top: 6px; /* Menambah jarak ke bawah */
+}
+
+.p-5 h5 {
+  margin-bottom: 1.5rem; /* Margin di bawah judul */
+}
+
+/* .bg-gray-100 {
+  background-color: #c5c5c5;
+} */
+.hover\:bg-gray-200:hover {
+  background-color: #e2e8f0;
+}
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+
+</style>

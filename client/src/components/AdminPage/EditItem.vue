@@ -1,6 +1,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import Swal from "sweetalert2";
 import router from "@/router";
 
 export default {
@@ -39,6 +40,11 @@ export default {
         };
       } catch (error) {
         console.error("Error fetching item:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to fetch item details. Please try again.",
+        });
       }
     };
 
@@ -59,7 +65,11 @@ export default {
       }
 
       if (Object.keys(updatedItem).length === 0) {
-        alert("No changes made.");
+        Swal.fire({
+          icon: "info",
+          title: "No changes made",
+          text: "You didn't make any updates to the item.",
+        });
         return;
       }
 
@@ -70,11 +80,26 @@ export default {
             "Content-Type": "application/json",
           },
         });
-        alert("Item updated successfully!");
-        router.push("/admin");
+
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Item updated successfully!",
+          confirmButtonText: "OK",
+            customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+              confirmButton: 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-400', // Tombol hijau
+            },
+        }).then(() => {
+          router.push("/admin");
+        });
       } catch (error) {
         console.error("Error updating item:", error);
-        alert("Failed to update item. Please try again.");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to update item. Please try again.",
+        });
       }
     };
 

@@ -89,6 +89,11 @@ export default {
               b.borrower_name || ""
             );
             break;
+          case "officer_name":
+            compareResult = (a.officer_name || "").localeCompare(
+              b.officer_name || ""
+            );
+            break;
           case "borrow_date":
             compareResult =
               new Date(a.borrow_date || 0) - new Date(b.borrow_date || 0);
@@ -183,7 +188,17 @@ export default {
 
 <template>
   <div class="container mx-auto px-4 py-8 mt-20">
-    <h1 class="font-bold text-3xl mb-2 text-center text-black">Invoice</h1>
+    <!-- Kembali Button -->
+    <div class="mb-6">
+      <router-link
+        to="/admin/home"
+        class=" text-white px-4 py-2 rounded-lg bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500"
+      >
+        Kembali
+      </router-link>
+    </div>
+    <h1 class="font-bold text-3xl mb-6 text-center text-black">Invoice</h1>
+
     <!-- Error State -->
     <div v-if="error" class="text-red-500 text-center mb-4">
       {{ error }}
@@ -217,49 +232,49 @@ export default {
         </p>
       </div>
     </div>
-    <!-- Kembali Button -->
-    <div class="mb-6">
-      <router-link
-        to="/admin/home"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-      >
-        Kembali
-      </router-link>
-    </div>
+    
 
     <!-- Table -->
-    <div
-      v-if="!loading && Borrow.length"
-      class="overflow-x-auto border-collapse border border-gray-300 rounded-xl"
-    >
-      <table class="min-w-full bg-white">
+    <div v-if="!loading && Borrow.length" class="overflow-x-auto border rounded-lg shadow-lg">
+      <table class="table-auto min-w-full border-collapse bg-white">
         <thead class="bg-blue-800 text-white">
           <tr>
-            <th
-              class="px-6 py-3 text-center border border-gray-300 cursor-pointer"
-              @click="toggleSort('borrow_date')"
-            >
+            <th class="px-6 py-3 border border-gray-300 text-center">
               Tanggal Peminjaman
+              <button @click="toggleSort('borrow_date')" class="ml-2">
+                <img src="../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
-            <th
-              class="px-6 py-3 text-center border border-gray-300 cursor-pointer"
-              @click="toggleSort('item_name')"
-            >
+            <th class="px-6 py-3 border border-gray-300 text-center">
               Nama Alat
+              <button @click="toggleSort('item_name')" class="ml-2">
+                <img src="../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
-            <th
-              class="px-6 py-3 text-center border border-gray-300 cursor-pointer"
-              @click="toggleSort('borrower_name')"
-            >
+            <th class="px-6 py-3 border border-gray-300 text-center">
               Peminjam
+              <button @click="toggleSort('borrower_name')" class="ml-2">
+                <img src="../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
-            <th
-              class="px-6 py-3 text-center border border-gray-300 cursor-pointer"
-              @click="toggleSort('return_date')"
-            >
+            <th class="px-6 py-3 border border-gray-300 text-center">
+              Teknisi
+              <button @click="toggleSort('officer_name')" class="ml-2">
+                <img src="../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
+            </th>
+            <th class="px-6 py-3 border border-gray-300 text-center">
               Tanggal Pengembalian
+              <button @click="toggleSort('return_date')" class="ml-2">
+                <img src="../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
-            <th class="px-6 py-3 text-center border border-gray-300">Aksi</th>
+            <th class="px-6 py-3 border border-gray-300 text-center">
+              Aksi
+              <!-- <button @click="toggleSort('action')" class="ml-2">
+                <img src="../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button> -->
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -277,6 +292,9 @@ export default {
             </td>
             <td class="border px-4 py-2 text-center">
               {{ transaction.borrower_name }}
+            </td>
+            <td class="border px-4 py-2 text-center">
+              {{ transaction.officer_name }}
             </td>
             <td class="border px-4 py-2 text-center">
               {{ formatDate(transaction.return_date) }}
@@ -387,3 +405,13 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped>
+th, td {
+  white-space: nowrap;
+}
+table {
+  width: 100%;
+  text-align: center;
+}
+</style>

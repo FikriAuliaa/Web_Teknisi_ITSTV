@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 export default {
   name: "OperatorView",
@@ -25,10 +26,11 @@ export default {
         if (result.data && result.data.data) {
           operators.value = result.data.data;
         } else {
-          error.value = "Data not in expected format.";
+          error.value = "Data format is incorrect.";
         }
       } catch (err) {
-        error.value = "Error fetching data. Please try again later.";
+        error.value = "Failed to fetch data. Please try again later.";
+        console.error("Error fetching data:", err);
       } finally {
         loading.value = false;
       }
@@ -36,16 +38,51 @@ export default {
 
     const deleteOperator = async (id) => {
       try {
-        await axios.delete(`${API_BASE_URL}/operator/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        const confirmResult = await Swal.fire({
+          title: "Yakin ta?",
+          text: "Teknisinya jadi ilang dong!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Ya, apus!",
+          cancelButtonText: "Gak jadi",
+          customClass: {
+            popup: "rounded-xl",
+            confirmButton: "bg-green-500 text-white hover:bg-green-600 focus:ring-green-400",
+            cancelButton: "bg-gray-300 text-black hover:bg-gray-400 focus:ring-gray-200",
           },
         });
-        alert("Operator deleted successfully!");
-        operators.value = operators.value.filter((operator) => operator._id !== id);
-        fetchData();
+
+        if (confirmResult.isConfirmed) {
+          await axios.delete(`${API_BASE_URL}/operator/${id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          Swal.fire({
+            title: "Dah dihapus bang!",
+            text: "Semoga nnti dapet teknisi baru.",
+            icon: "success",
+            customClass: {
+              popup: "rounded-xl",
+              confirmButton: "bg-green-500 text-white hover:bg-green-600 focus:ring-green-400",
+            },
+          });
+
+          // Perbarui daftar operator tanpa memanggil ulang fetchData
+          operators.value = operators.value.filter((operator) => operator._id !== id);
+        }
       } catch (err) {
-        error.value = "Error deleting operator. Please try again later.";
+        console.error("Error deleting operator:", err);
+        Swal.fire({
+          title: "Error!",
+          text: "Error deleting operator. Please try again later.",
+          icon: "error",
+          customClass: {
+            popup: "rounded-xl",
+            confirmButton: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400",
+          },
+        });
       }
     };
 
@@ -70,22 +107,48 @@ export default {
 
 <template>
   <div class="mt-6">
+    <!-- Loading Spinner -->
     <div v-if="loading" class="flex justify-center items-center">
       <div class="text-center">
-        <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0112-7.32V4a10 10 0 00-10 10h2z"></path>
+        <svg
+          class="animate-spin h-10 w-10 text-blue-600 mx-auto"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 0112-7.32V4a10 10 0 00-10 10h2z"
+          ></path>
         </svg>
         <p class="mt-2 text-gray-500 italic">Satu Tekad, Satu Tujuan ITS TV Eureka!</p>
       </div>
     </div>
 
+    <!-- Error Message -->
     <div v-if="error" class="text-red-500 text-center">
       {{ error }}
     </div>
 
-    <div v-if="!loading && operators.length" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <div v-for="operator in operators" :key="operator._id" class="bg-white border border-gray-200 rounded-lg shado flex flex-col h-full">
+    <!-- Operators List -->
+    <div
+      v-if="!loading && operators.length"
+      class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    >
+      <div
+        v-for="operator in operators"
+        :key="operator._id"
+        class="bg-white border border-gray-200 rounded-lg shadow flex flex-col h-full"
+      >
         <div class="flex flex-col items-center pb-10 mt-6">
           <h5 class="mb-1 text-xl font-medium text-gray-900">
             {{ operator.name }}
@@ -93,7 +156,6 @@ export default {
           <span class="text-sm text-gray-500">
             {{ operator.Email }}
           </span>
-
           <p class="text-sm text-gray-500">
             {{ operator.NoTelp }}
           </p>
@@ -101,21 +163,26 @@ export default {
             <a
               href="#"
               @click.prevent="navigateToEditPage(operator._id)"
-              class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >Edit</a
+              class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
             >
+              Edit
+            </a>
             <a
               href="#"
               @click.prevent="deleteOperator(operator._id)"
-              class="py-2 px-4 ms-2 text-sm font-medium text-white focus:outline-none bg-red-600 rounded-lg border border-red-700 hover:bg-red-700 hover:text-white focus:z-10 focus:ring-4 focus:ring-red-200"
-              >Remove</a
+              class="py-2 px-4 ms-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300"
             >
+              Remove
+            </a>
           </div>
         </div>
       </div>
     </div>
 
-    <p v-if="!loading && !operators.length" class="text-gray-500 text-center">No operators available.</p>
+    <!-- No Operators Message -->
+    <p v-if="!loading && !operators.length" class="text-gray-500 text-center">
+      No operators available.
+    </p>
   </div>
 </template>
 

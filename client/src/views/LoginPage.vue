@@ -1,9 +1,7 @@
 <template>
   <div class="flex flex-col justify-center items-center mt-28 mb-8">
     <!-- Form box -->
-    <div
-      class="form-box w-full max-w-sm p-6 rounded-lg shadow-lg mb-6 max-md:w-5/6"
-    >
+    <div class="form-box w-full max-w-sm p-6 rounded-lg shadow-lg mb-6 max-md:w-5/6">
       <header>Login Yuk</header>
       <div class="input-box">
         <input
@@ -12,9 +10,7 @@
           class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Username"
         />
-        <i
-          class="bx bx-user absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
-        ></i>
+        <i class="bx bx-user absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"></i>
       </div>
       <div class="input-box">
         <input
@@ -23,9 +19,7 @@
           class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Password"
         />
-        <i
-          class="bx bx-lock-alt absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
-        ></i>
+        <i class="bx bx-lock-alt absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"></i>
       </div>
       <div class="input-box">
         <select
@@ -34,11 +28,9 @@
         >
           <option value="" disabled selected>Select Role</option>
           <option value="admin">Admin</option>
-          <option value="operator">Crew</option>
+          <option value="operator">Kru</option>
         </select>
-        <i
-          class="bx bx-user-circle absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"
-        ></i>
+        <i class="bx bx-user-circle absolute top-1/2 transform -translate-y-1/2 right-4 text-gray-400"></i>
       </div>
       <button
         @click="login"
@@ -48,16 +40,15 @@
       </button>
     </div>
     <p class="italic text-gray-400 text-sm mx-auto text-center">
-      "Kebaikan terbaik adalah ketika kamu melupakan setiap kebaikan yang pernah
-      kamu lakukan"
+      "Jangan banyak dipikir, tapi dikerjakan!"
     </p>
-    <p class="italic text-gray-400 text-sm mx-auto text-center">
-      -Iki Adfi Nur Mohamad
-    </p>
+    <p class="italic text-gray-400 text-sm mx-auto text-center">-Gemilang</p>
   </div>
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   name: "LoginPage",
   data() {
@@ -70,26 +61,35 @@ export default {
   methods: {
     async login() {
       if (!this.username || !this.password) {
-        alert("Username and Password cannot be empty.");
+        Swal.fire({
+          title: "Error!",
+          text: "Username ama Password gabole kosong woi.",
+          icon: "error",
+          confirmButtonText: "OK",
+          customClass: {
+            popup: "rounded-xl",
+            confirmButton: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400",
+          },
+        });
         return;
       }
+
       if (!this.role) {
-        alert("Please select a role.");
+        Swal.fire({
+          title: "Error!",
+          text: "Role nya dipilih dulu dongg!",
+          icon: "error",
+          confirmButtonText: "OK",
+          customClass: {
+            popup: "rounded-xl",
+            confirmButton: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400",
+          },
+        });
         return;
       }
 
       try {
-        console.log("Login payload:", {
-          username: this.username,
-          password: this.password,
-          role: this.role,
-        });
-
-        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(
-          /\/$/,
-          ""
-        );
-
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
           method: "POST",
           headers: {
@@ -105,13 +105,18 @@ export default {
 
         const data = await response.json();
 
-        console.log("Server response:", data);
-
         if (response.ok) {
           if (data.user.role !== this.role) {
-            alert(
-              `Username "${this.username}" and role "${this.role}" do not match.`
-            );
+            Swal.fire({
+              title: "Error!",
+              text: `Username "${this.username}" dan role "${this.role}" ga sesuai nih.`,
+              icon: "error",
+              confirmButtonText: "OK",
+              customClass: {
+                popup: "rounded-xl",
+                confirmButton: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400",
+              },
+            });
             return;
           }
 
@@ -119,18 +124,44 @@ export default {
           localStorage.setItem("role", data.user.role);
           localStorage.setItem("username", data.user.username);
 
-          alert("Login successful!");
-
-          this.$router.push({
-            path:
-              data.user.role === "admin" ? "/admin/home" : "/HomePageOperator",
+          Swal.fire({
+            title: "Success!",
+            text: "Gokil udh login cuy!",
+            icon: "success",
+            confirmButtonText: "OK",
+            customClass: {
+              popup: "rounded-xl",
+              confirmButton: "bg-green-500 text-white hover:bg-green-600 focus:ring-green-400",
+            },
+          }).then(() => {
+            this.$router.push({
+              path: data.user.role === "admin" ? "/admin/home" : "/HomePageOperator",
+            });
           });
         } else {
-          alert(data.message || "Login failed.");
+          Swal.fire({
+            title: "Error!",
+            text: data.message || "Ente gabisa login.",
+            icon: "error",
+            confirmButtonText: "OK",
+            customClass: {
+              popup: "rounded-xl",
+              confirmButton: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400",
+            },
+          });
         }
       } catch (error) {
         console.error("Login error:", error);
-        alert("Network error. Please check your connection.");
+        Swal.fire({
+          title: "Error!",
+          text: "Internet ente ampas, cek koneksi, jgn pke indihome.",
+          icon: "error",
+          confirmButtonText: "OK",
+          customClass: {
+            popup: "rounded-xl",
+            confirmButton: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400",
+          },
+        });
       }
     },
   },

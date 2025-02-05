@@ -141,23 +141,14 @@ export default {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8 relative">
-    <!-- Back Button (Dengan Jarak yang Diperbaiki) -->
-    <div class="absolute top-4 left-4 md:relative md:top-0 md:left-0">
-      <button
-        @click="goHome"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm md:text-base w-full md:w-auto"
-      >
-        Back to Home
-      </button>
+   <div class="container mx-auto px-4 py-8 relative mt-16 md:mt-20">
+    <div class="absolute top-4 left-4 md:relative md:top-0 md:left-0 justif">
+      <button @click="goHome" class="bg-gradient-to-l from-blue-900 to-blue-600 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg text-sm md:text-base w-full md:w-auto">Kembali</button>
     </div>
-
     <!-- Page Title (Dengan Jarak dari Tombol) -->
-    <h2
-      class="text-xl sm:text-2xl font-bold text-gray-800 text-center w-full mx-auto mt-8"
-    >
-      Daftar alat sedang dipinjam
-    </h2>
+    <h1 class="text-xl lg:text-3xl font-bold text-gray-800 text-center w-full mx-auto mt-12 md:mt-6 mb-3">Daftar Alat Dipinjam</h1>
+    <p class="italic text-gray-400 text-sm mx-auto text-center md:w-1/2">"yang cewe nunggu ditembak, yang cowo takut ditolak, yang salah orang jual nasi goreng, nasi udah matang malah digoreng"</p>
+    <p class="italic text-gray-400 text-sm mx-auto text-center">-Depot Taria</p>
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center items-center mt-8">
@@ -175,41 +166,48 @@ export default {
     </div>
 
     <!-- Responsive Table Wrapper -->
-    <div v-if="!loading && borrowedItems.length" class="overflow-x-auto mt-6">
+    <div v-if="!loading && borrowedItems.length" class="overflow-x-auto mt-6 border rounded-lg shadow-lg">
       <table
         class="min-w-max w-full bg-white border-collapse border border-gray-300"
       >
-        <thead class="bg-gray-100">
+        <thead class="bg-blue-800 text-white">
           <tr class="text-sm sm:text-base">
             <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
+              class="px-6 py-3 border border-gray-300 text-center"
             >
-              Item Name
+              Nama Alat
+              <button @click="toggleSort('item_name')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
+            </th>
+            <th class="px-6 py-3 border border-gray-300 text-center">
+              Peminjam
+              <button @click="toggleSort('borrower_name')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
+            </th>
+            <th class="px-6 py-3 border border-gray-300 text-center">
+              Teknisi
+              <button @click="toggleSort('officer_name')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
             >
-              Borrower
+              Keperluan
             </th>
-            <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
-            >
-              Officer
+            <th class="px-6 py-3 border border-gray-300 text-center">
+              Tanggal Peminjaman
+              <button @click="toggleSort('borrow_date')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
-            <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
-            >
-              Purpose
-            </th>
-            <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
-            >
-              Borrow Date
-            </th>
-            <th
-              class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
-            >
-              Return Date
+            <th class="px-6 py-3 border border-gray-300 text-center">
+              Tanggal Pengembalian
+              <button @click="toggleSort('return_date')" class="ml-2">
+                <img src="../../assets/filter.svg" class="w-5 inline" alt="filter icon" />
+              </button>
             </th>
             <th
               class="px-3 py-2 sm:px-6 sm:py-3 text-center border border-gray-300"
@@ -287,3 +285,13 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped>
+th, td {
+  white-space: nowrap;
+}
+table {
+  width: 100%;
+  text-align: center;
+}
+</style>

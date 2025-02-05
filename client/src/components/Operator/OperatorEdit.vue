@@ -1,6 +1,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   name: "EditOperator",
@@ -34,8 +35,20 @@ export default {
           noTelp: operator.value.noTelp || "",
           email: operator.value.email || "",
         };
-      } catch (error) {
+      } 
+      catch (error) 
+      {
         console.error("Error fetching operator:", error);
+        //Ku comment alertnya karena dia bug
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "Gagal Memuat Data",
+        //   text: "Tidak dapat memuat data operator. Silakan coba lagi.",
+        //   // customClass: 
+        //   // {
+        //   //     popup: 'rounded-xl', // Menambah rounding pada popup
+        //   //   },
+        // });
       }
     };
 
@@ -52,10 +65,25 @@ export default {
             },
           }
         );
-        alert("Operator updated successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: "Teknisi berhasil diperbarui!",
+          customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+              confirmButton: 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-400', // Tombol hijau
+            },
+        });
       } catch (error) {
         console.error("Error updating Operator:", error);
-        alert("Failed to update Operator. Please try again.");
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: "Tidak dapat memperbarui operator. Silakan coba lagi.",
+          customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+            },
+        });
       }
     };
 

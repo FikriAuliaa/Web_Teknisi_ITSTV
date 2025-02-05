@@ -19,7 +19,7 @@
           <img src="../../assets/PROFILE.png" alt="User Profile Logo" class="h-12 w-12 rounded-full border border-gray-200 bg-white p-1" />
           <div class="text-sm">
             <span class="block font-medium capitalize">{{ username }}</span>
-            <span class="block text-xs"> as {{ role === "operator" ? "crew" : role }} </span>
+            <span class="block text-xs"> Anda login sebagai {{ role === "operator" ? "Kru" : role }} </span>
           </div>
         </div>
 
@@ -43,7 +43,7 @@
 
       <div v-if="username && role" class="px-4 py-2 border-t border-gray-400">
         <span class="block font-medium capitalize">{{ username }}</span>
-        <span class="block text-xs"> as {{ role === "operator" ? "crew" : role }} </span>
+        <span class="block text-xs"> as {{ role === "operator" ? "Kru" : role }} </span>
       </div>
 
       <button v-if="username !== 'Guest'" @click="logout" class="block w-full text-left px-4 py-2 bg-red-600 hover:bg-red-700 transition text-white">Logout</button>

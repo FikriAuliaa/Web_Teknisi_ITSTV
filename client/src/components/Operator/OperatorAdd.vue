@@ -64,6 +64,7 @@
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   name: "OperatorAdd",
@@ -83,26 +84,30 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      console.log(this.form);
+    async submitForm() {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 
-      // Ambil URL API dari environment variable
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, ""); // Hilangkan trailing slash
-
-      axios
-        .post(`${API_BASE_URL}/operator`, this.form, {
+      try {
+        const response = await axios.post(`${API_BASE_URL}/operator`, this.form, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        })
-        .then((response) => {
-          console.log("Form submitted successfully:", response.data);
-          alert("Form submitted successfully!");
+        });
 
+        // Tampilkan alert sukses
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: "Anjay ada teknisi baru!",
+          // confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK",
+          customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+              confirmButton: 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-400', // Tombol hijau
+            },
+        }).then(() => {
           this.form = {
-            image: "",
             name: "",
-            age: null,
             NoTelp: "",
             Email: "",
           };
@@ -112,10 +117,22 @@ export default {
           }
 
           window.location.reload();
-        })
-        .catch((error) => {
-          console.error("Error submitting form:", error);
         });
+      } catch (error) {
+        // Tampilkan alert error
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: "Error submitting form. Mohon cek kembali!",
+          confirmButtonColor: "#d33",
+          confirmButtonText: "Coba Lagi",
+          customClass: {
+              popup: 'rounded-xl', // Menambah rounding pada popup
+            },
+        });
+
+        console.error("Error submitting form:", error);
+      }
     },
   },
 };

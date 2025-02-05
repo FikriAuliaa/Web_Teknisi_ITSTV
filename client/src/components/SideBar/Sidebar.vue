@@ -16,7 +16,7 @@ export default {
 </script>
 
 <template>
-  <div class="fixed h-max w-max cursor-pointer">
+  <div class="fixed h-max w-max cursor-pointer hidden md:block">
     <div class="h-screen w-screen duration-500">
       <div
         class="absolute z-40 h-screen w-screen border border-gray-500 bg-blue-900 p-6 text-gray-200 duration-500 md:w-1/2 lg:w-44"
@@ -35,7 +35,7 @@ export default {
       </div>
     </div>
   </div>
-  <div class="fixed z-[100] h-screen w-max cursor-pointer lg:hidden block">
+  <div class="fixed z-[100] h-screen w-max cursor-pointer md:hidden">
     <div
       :class="[
         'absolute z-[100] flex flex-col gap-5 rounded-r-lg font-light text-blue-800 duration-500',
