@@ -4,7 +4,7 @@
       <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
         Jadwal Teknisi
       </h2>
-      <img src="/images/jadwalteknisi.png" alt="jadwal" class="mb-6" />
+      <img src="/images/jadwalteknisi.png" alt="jadwal" class="mb-10 mx-auto" />
 
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
